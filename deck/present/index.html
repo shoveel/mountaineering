@@ -1,0 +1,601 @@
+<title>Life at the Top · Ascent</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=National+Park:wght@400;700&family=Nothing+You+Could+Do&display=swap">
+<style>
+  /* Layout: one 1920x1080 stage scaled to fit; slides stacked, revealed by a rising gradient. */
+  :root {
+    --void: #05090c;      /* letterbox around the stage */
+    --ink: #0e1c26;       /* deck dark ground */
+    --paper: #f4f1ea;     /* deck light ground */
+    --glow: #e9733f;      /* alpenglow accent */
+    --mist: #c9d6db;      /* chrome text */
+    --mono: 'IBM Plex Mono', 'Courier New', monospace;
+    color-scheme: dark;
+  }
+  html, body { height: 100%; }
+  body { background: var(--void); color: var(--mist); overflow: hidden; touch-action: pan-y; }
+  #frame { position: fixed; inset: 0; display: grid; place-items: center; }
+  #stage { position: relative; width: 1920px; height: 1080px; flex: none; transform-origin: 50% 50%; overflow: hidden; background: var(--ink); }
+
+  /* --- emulation of the deck renderer's defaults --- */
+  #stage section { position: absolute; inset: 0; width: 1920px; height: 1080px; box-sizing: border-box;
+    display: flex; flex-direction: column; overflow: hidden; visibility: hidden;
+    font-family: Barlow, Arial, sans-serif; color: #eef2f1; will-change: transform, mask-position; }
+  #stage section * { box-sizing: border-box; margin: 0; }
+  #stage section > * { position: relative; }
+  #stage section div { display: flex; flex-direction: column; }
+  #stage section img { display: block; object-fit: cover; max-width: none; }
+  #stage section svg { display: block; flex: none; }
+  #stage section h1 { font-size: 96px; font-weight: 600; line-height: 1.1; }
+  #stage section h2 { font-size: 64px; font-weight: 600; line-height: 1.15; }
+  #stage section h3 { font-size: 44px; font-weight: 600; line-height: 1.2; }
+  #stage section p  { font-size: 32px; line-height: 1.4; }
+  #stage section.on { visibility: visible; }
+
+  /* the drifting band of mist that rides the transition edge */
+  #mist { position: absolute; inset: 0; pointer-events: none; opacity: 0; z-index: 5; }
+
+  /* chrome */
+  .chip { position: fixed; z-index: 20; font: 500 13px/1 var(--mono); letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--mist); background: rgba(14, 28, 38, .72); border: 1px solid rgba(201, 214, 219, .18);
+    padding: 10px 14px; border-radius: 999px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    transition: opacity .6s ease; }
+  #hint { left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); white-space: nowrap; }
+  #hint.gone, #tools.gone { opacity: 0; }
+  #tools:focus-within { opacity: 1; }
+  #tools { right: calc(14px + env(safe-area-inset-right, 0px)); top: calc(14px + env(safe-area-inset-top, 0px)); display: flex; gap: 6px; padding: 6px; }
+  #tools button { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; background: none; border: 0; padding: 6px 10px; border-radius: 999px; cursor: pointer; }
+  #tools button:hover, #tools button[aria-pressed="true"] { background: rgba(233, 115, 63, .22); color: #fff; }
+  #tools button:focus-visible { outline: 2px solid var(--glow); outline-offset: 2px; }
+  #notes { position: fixed; z-index: 19; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px)); max-width: 880px; margin: 0 auto; max-height: 38vh; overflow: auto;
+    background: rgba(10, 22, 30, .94); border: 1px solid rgba(201, 214, 219, .2); border-radius: 14px; padding: 18px 22px;
+    font: 400 17px/1.55 Barlow, Arial, sans-serif; color: #e6edef; white-space: pre-line; }
+  #notes b { display: block; font: 500 12px/1.4 var(--mono); letter-spacing: 2px; color: var(--glow); margin-bottom: 6px; }
+  @media (max-width: 560px) { #hint { font-size: 11px; } }
+</style>
+
+<div id="frame"><div id="stage">
+<section data-i="0" id="cover" data-transition="fade" style="background:#0e1c26;color:#eef2f1;font-family:'Barlow', Arial, sans-serif;padding:112px 192px 208px;display:flex;flex-direction:column;justify-content:end;gap:20px">
+<img src="assets/cover.jpg" alt="Machapuchare peak glowing pink at sunrise, Himalayas, Nepal" style="position:absolute;left:0;top:0;width:1920px;height:984px;object-fit:cover">
+<div style="position:absolute;left:0;top:0;width:1920px;height:984px;background:linear-gradient(180deg, rgba(14,28,38,0) 32%, rgba(14,28,38,0.72) 62%, #0e1c26 100%)"></div>
+<img src="assets/contours-light.svg" alt="" style="position:absolute;left:0;top:0;width:1920px;height:984px;object-fit:cover;opacity:0.1">
+<p style="font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;letter-spacing:4px;color:#e9733f;text-transform:uppercase">Group 7 · Mountains and high-altitude regions</p>
+<h1 style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:160px;font-weight:700;line-height:0.95;text-transform:uppercase;letter-spacing:-1px">Life at the top</h1>
+<p style="font-size:40px;line-height:1.3;color:#c9d6db">Wild animals of the Andes, the Himalayas, the Alps and the Rocky Mountains</p>
+<div style="position:absolute;left:0;top:984px;width:1920px;height:96px;background:#0a161e;border-top:1px solid #22384a"></div>
+<p style="position:absolute;left:192px;top:1015px;width:380px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.4;letter-spacing:2px;color:#e9733f;white-space:nowrap">▲ BASE CAMP · 0 M</p>
+<div style="position:absolute;left:600px;top:1031px;width:720px;height:2px;background:#2c4252"></div>
+<div style="position:absolute;left:593px;top:1025px;width:14px;height:14px;border-radius:50%;background:#e9733f"></div>
+<p style="position:absolute;left:1348px;top:1015px;width:380px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.4;letter-spacing:2px;color:#8aa0ab;text-align:right;white-space:nowrap">LIFE AT THE TOP · 01</p>
+</section>
+<section data-i="1" id="where" data-transition="fade" style="display:flex; flex-direction:column; gap:12px; padding:112px 192px 208px; background:#0e1c26">
+  <img src="assets/contours-light.svg" alt="" style="position:absolute; top:0; left:0; width:1920px; height:984px; opacity:0.08">
+  <img src="assets/where-himalaya.jpg" alt="Snowy Himalayan peaks under a blue sky" style="position:absolute; top:280px; left:192px; width:366px; height:592px; border-radius:18px">
+  <img src="assets/where-andes.jpg" alt="Snowy peaks above a turquoise lake in the Cordillera Huayhuash, Peru" style="position:absolute; top:280px; left:582px; width:366px; height:592px; border-radius:18px">
+  <img src="assets/where-alps.jpg" alt="Green alpine meadow, lake and rocky peaks in the Swiss Alps" style="position:absolute; top:280px; left:972px; width:366px; height:592px; border-radius:18px">
+  <img src="assets/where-rockies.jpg" alt="Moraine Lake reflecting rocky peaks, Canadian Rockies" style="position:absolute; top:280px; left:1362px; width:366px; height:592px; border-radius:18px">
+  <div style="position:absolute; top:280px; left:192px; width:366px; height:592px; display:flex; flex-direction:column; background:linear-gradient(180deg, #0e1c2600 18%, #0e1c26cc 48%, #0e1c26f7 70%); border-radius:18px">
+  </div>
+  <div style="position:absolute; top:280px; left:582px; width:366px; height:592px; display:flex; flex-direction:column; background:linear-gradient(180deg, #0e1c2600 18%, #0e1c26cc 48%, #0e1c26f7 70%); border-radius:18px">
+  </div>
+  <div style="position:absolute; top:280px; left:972px; width:366px; height:592px; display:flex; flex-direction:column; background:linear-gradient(180deg, #0e1c2600 18%, #0e1c26cc 48%, #0e1c26f7 70%); border-radius:18px">
+  </div>
+  <div style="position:absolute; top:280px; left:1362px; width:366px; height:592px; display:flex; flex-direction:column; background:linear-gradient(180deg, #0e1c2600 18%, #0e1c26cc 48%, #0e1c26f7 70%); border-radius:18px">
+  </div>
+  <p style="font-family:'IBM Plex Mono', 'Courier New', monospace; font-size:24px; letter-spacing:4px; text-transform:uppercase; color:#e9733f">Where</p>
+  <h2 style="font-family:'National Park', sans-serif; font-size:72px; font-weight:700; line-height:1.08; text-transform:uppercase; color:#eef2f1">most famous mountain ranges</h2>
+  <div style="display:flex; flex-direction:row; gap:24px; flex:1; padding:24px 0 0">
+    <div style="display:flex; flex-direction:column; gap:6px; justify-content:end; flex:1; padding:28px">
+      <p style="font-family:'Nothing You Could Do', 'Brush Script MT', serif; font-size:36px; line-height:1.2; color:#e9733f">the highest!</p>
+      <h3 style="font-family:'National Park', sans-serif; font-size:44px; font-weight:700; line-height:1.05; text-transform:uppercase; color:#eef2f1">Himalayas</h3>
+      <p style="font-family:Barlow, Arial, sans-serif; font-size:28px; line-height:1.35; color:#c9d6db">Asia</p>
+      <p style="font-family:'IBM Plex Mono', 'Courier New', monospace; font-size:24px; line-height:1.5; color:#eef2f1">Everest 8,849 m</p>
+      <div style="height:8px; display:flex; flex-direction:row; background:#eef2f133; border-radius:4px">
+        <div style="height:8px; display:flex; flex-direction:column; flex:100; background:#e9733f; border-radius:4px">
+        </div>
+      </div>
+      <p style="font-family:Barlow, Arial, sans-serif; font-size:26px; line-height:1.5; color:#a9bcc4">2,400 km long</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px; justify-content:end; flex:1; padding:28px">
+      <p style="font-family:'Nothing You Could Do', 'Brush Script MT', serif; font-size:36px; line-height:1.2; color:#e9733f">the longest!</p>
+      <h3 style="font-family:'National Park', sans-serif; font-size:44px; font-weight:700; line-height:1.05; text-transform:uppercase; color:#eef2f1">Andes</h3>
+      <p style="font-family:Barlow, Arial, sans-serif; font-size:28px; line-height:1.35; color:#c9d6db">South America</p>
+      <p style="font-family:'IBM Plex Mono', 'Courier New', monospace; font-size:24px; line-height:1.5; color:#eef2f1">Aconcagua 6,961 m</p>
+      <div style="height:8px; display:flex; flex-direction:row; background:#eef2f133; border-radius:4px">
+        <div style="height:8px; display:flex; flex-direction:column; flex:79; background:#e9733f; border-radius:4px">
+        </div>
+        <div style="flex:0 1 auto; min-height:8px; max-height:8px"></div>
+      </div>
+      <p style="font-family:Barlow, Arial, sans-serif; font-size:26px; line-height:1.5; color:#a9bcc4">7,000 km long</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px; justify-content:end; flex:1; padding:28px">
+      <h3 style="font-family:'National Park', sans-serif; font-size:44px; font-weight:700; line-height:1.05; text-transform:uppercase; color:#eef2f1">Alps</h3>
+      <p style="font-family:Barlow, Arial, sans-serif; font-size:28px; line-height:1.35; color:#c9d6db">Europe</p>
+      <p style="font-family:'IBM Plex Mono', 'Courier New', monospace; font-size:24px; line-height:1.5; color:#eef2f1">Mont Blanc 4,806 m</p>
+      <div style="height:8px; display:flex; flex-direction:row; background:#eef2f133; border-radius:4px">
+        <div style="height:8px; display:flex; flex-direction:column; flex:54; background:#e9733f; border-radius:4px">
+        </div>
+        <div style="flex:0 1 auto; min-height:8px; max-height:8px"></div>
+      </div>
+      <p style="font-family:Barlow, Arial, sans-serif; font-size:26px; line-height:1.5; color:#a9bcc4">1,200 km long</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px; justify-content:end; flex:1; padding:28px">
+      <h3 style="font-family:'National Park', sans-serif; font-size:44px; font-weight:700; line-height:1.05; text-transform:uppercase; color:#eef2f1">Rockies</h3>
+      <p style="font-family:Barlow, Arial, sans-serif; font-size:28px; line-height:1.35; color:#c9d6db">North America</p>
+      <p style="font-family:'IBM Plex Mono', 'Courier New', monospace; font-size:24px; line-height:1.5; color:#eef2f1">Mt Elbert 4,401 m</p>
+      <div style="height:8px; display:flex; flex-direction:row; background:#eef2f133; border-radius:4px">
+        <div style="height:8px; display:flex; flex-direction:column; flex:50; background:#e9733f; border-radius:4px">
+        </div>
+        <div style="flex:0 1 auto; min-height:8px; max-height:8px"></div>
+      </div>
+      <p style="font-family:Barlow, Arial, sans-serif; font-size:26px; line-height:1.5; color:#a9bcc4">4,800 km long</p>
+    </div>
+  </div>
+  <div style="position:absolute; top:984px; left:0; width:1920px; height:96px; display:flex; flex-direction:column; background:#0a161e; border-top:1px solid #22384a">
+  </div>
+  <p style="position:absolute; top:1015px; left:192px; width:380px; font-family:'IBM Plex Mono', 'Courier New', monospace; font-size:24px; line-height:1.4; letter-spacing:2px; white-space:nowrap; color:#e9733f">▲ 1,000 M</p>
+  <div style="position:absolute; top:1031px; left:600px; width:720px; height:2px; display:flex; flex-direction:column; background:#2c4252">
+  </div>
+  <div style="position:absolute; top:1031px; left:600px; width:81px; height:2px; display:flex; flex-direction:column; background:#e9733f">
+  </div>
+  <div style="position:absolute; top:1025px; left:674px; width:14px; height:14px; display:flex; flex-direction:column; background:#e9733f; border-radius:256px">
+  </div>
+  <p style="position:absolute; top:1015px; left:1348px; width:380px; font-family:'IBM Plex Mono', 'Courier New', monospace; font-size:24px; line-height:1.4; letter-spacing:2px; text-align:right; white-space:nowrap; color:#8aa0ab">LIFE AT THE TOP · 02</p>
+</section>
+<section data-i="2" id="habitat" data-transition="fade" style="display:flex; flex-direction:column; gap:12px; padding:112px 192px 208px; background:#f4f1ea">
+  <img src="assets/art-habitat.png" alt="Illustrated mountain cut into zones: forest up to 2,500 m, alpine meadow up to 4,200 m, bare rock up to 6,200 m and snow and ice above. A scale on the right shows the temperature falling from +25 °C to −32 °C and the dots of oxygen thinning out, with half the air left at 5,500 m." style="position:absolute; top:0; left:0; width:1920px; height:984px">
+  <div style="width:760px; display:flex; flex-direction:column; gap:12px">
+    <p style="font-family:'IBM Plex Mono', 'Courier New', monospace; font-size:24px; letter-spacing:4px; text-transform:uppercase; color:#b4501f">The habitat</p>
+    <h2 style="font-family:'National Park', sans-serif; font-size:72px; font-weight:700; line-height:1.08; text-transform:uppercase; color:#0e1c26">Life gets harder as you climb</h2>
+  </div>
+  <div style="position:absolute; top:984px; left:0; width:1920px; height:96px; display:flex; flex-direction:column; background:#0a161e; border-top:1px solid #22384a">
+  </div>
+  <p style="position:absolute; top:1015px; left:192px; width:380px; font-family:'IBM Plex Mono', 'Courier New', monospace; font-size:24px; line-height:1.4; letter-spacing:2px; white-space:nowrap; color:#e9733f">▲ 2,000 M</p>
+  <div style="position:absolute; top:1031px; left:600px; width:720px; height:2px; display:flex; flex-direction:column; background:#2c4252">
+  </div>
+  <div style="position:absolute; top:1031px; left:600px; width:163px; height:2px; display:flex; flex-direction:column; background:#e9733f">
+  </div>
+  <div style="position:absolute; top:1025px; left:756px; width:14px; height:14px; display:flex; flex-direction:column; background:#e9733f; border-radius:256px">
+  </div>
+  <p style="position:absolute; top:1015px; left:1348px; width:380px; font-family:'IBM Plex Mono', 'Courier New', monospace; font-size:24px; line-height:1.4; letter-spacing:2px; text-align:right; white-space:nowrap; color:#8aa0ab">LIFE AT THE TOP · 03</p>
+</section>
+<section data-i="3" id="wildlife" data-transition="fade" style="background:#0e1c26">
+  <img src="assets/contours-light.svg" alt="" style="position:absolute; top:0; left:0; width:1920px; height:984px; opacity:0.08">
+  <div id="e2-t9e0zz" style="position:absolute; top:984px; left:0; width:1920px; height:96px; display:flex; flex-direction:column; background:#0a161e; border-top:1px solid #22384a">
+  </div>
+  <p id="e3-t9e0zz" style="position:absolute; top:1015px; left:192px; width:380px; font-family:'IBM Plex Mono', 'Courier New', monospace; font-size:24px; line-height:1.4; letter-spacing:2px; white-space:nowrap; color:#e9733f">▲ 3,000 M</p>
+  <div id="e4-t9e0zz" style="position:absolute; top:1031px; left:600px; width:720px; height:2px; display:flex; flex-direction:column; background:#2c4252">
+  </div>
+  <div id="e5-t9e0zz" style="position:absolute; top:1031px; left:600px; width:244px; height:2px; display:flex; flex-direction:column; background:#e9733f">
+  </div>
+  <div id="e6-t9e0zz" style="position:absolute; top:1025px; left:837px; width:14px; height:14px; display:flex; flex-direction:column; background:#e9733f; border-radius:256px">
+  </div>
+  <p id="e7-t9e0zz" style="position:absolute; top:1015px; left:1348px; width:380px; font-family:'IBM Plex Mono', 'Courier New', monospace; font-size:24px; line-height:1.4; letter-spacing:2px; text-align:right; white-space:nowrap; color:#8aa0ab">LIFE AT THE TOP · 04</p>
+  <p id="p77697348b022r0-e5f50c86" style="position:absolute; top:115.43px; left:192px; width:1536px; font-family:'IBM Plex Mono', 'Courier New', monospace; font-size:24px; letter-spacing:4px; text-transform:uppercase; color:#e9733f">Wildlife</p>
+  <h2 id="p77697348b022r1-e5f50c86" style="position:absolute; top:161.43px; left:192px; width:1536px; font-family:'National Park', sans-serif; font-size:72px; font-weight:700; line-height:1.08; text-transform:uppercase; color:#eef2f1">Who lives up there?</h2>
+  <div id="be73e19f" style="position:absolute; top:278.43px; left:192px; width:760px; display:flex; flex-direction:column; gap:16px">
+    <div style="display:flex; flex-direction:column">
+      <img src="assets/wild-ibex.jpg" alt="An Alpine ibex on a steep rocky slope in front of Mont Blanc" style="width:760px; height:270px; border-radius:18px">
+      <p style="padding:8px 0 0 6px; font-family:'Nothing You Could Do', 'Brush Script MT', serif; font-size:34px; line-height:1.2; color:#e9733f">Alpine ibex · Alps</p>
+    </div>
+    <div style="display:flex; flex-direction:row; gap:24px">
+      <div style="display:flex; flex-direction:column">
+        <img src="assets/wild-yaks.jpg" alt="Two yaks resting in the snow, Himalayas" style="width:368px; height:210px; border-radius:18px">
+        <p style="padding:8px 0 0 6px; font-family:'Nothing You Could Do', 'Brush Script MT', serif; font-size:34px; line-height:1.2; color:#e9733f">yaks · Himalayas</p>
+      </div>
+      <div style="display:flex; flex-direction:column">
+        <img src="assets/wild-guanaco.jpg" alt="A guanaco in front of the granite towers of Torres del Paine, Chile" style="width:368px; height:210px; border-radius:18px">
+        <p style="padding:8px 0 0 6px; font-family:'Nothing You Could Do', 'Brush Script MT', serif; font-size:34px; line-height:1.2; color:#e9733f">guanaco · Andes</p>
+      </div>
+    </div>
+  </div>
+  <div id="wl-row0" style="position:absolute; top:278px; left:1032px; width:696px; display:flex; flex-direction:column; gap:4px; padding:0 0 0 26px; border-left:4px solid #e9733f">
+    <div style="display:flex; flex-direction:row; gap:18px; align-items:baseline">
+      <h3 style="font-family:'National Park', sans-serif; font-size:36px; font-weight:700; line-height:1.1; text-transform:uppercase; color:#8fbccb">Himalayas</h3>
+      <p style="font-family:'Nothing You Could Do', 'Brush Script MT', serif; font-size:30px; line-height:1.1; color:#e9733f">the roof of the world</p>
+    </div>
+    <p style="font-family:Barlow, Arial, sans-serif; font-size:30px; font-weight:500; line-height:1.3; color:#eef2f1">snow leopard, yak, red panda, blue sheep</p>
+    <p style="font-family:Barlow, Arial, sans-serif; font-size:26px; line-height:1.35; color:#a9bcc4">Yaks have long, shaggy fur and huge lungs for the thin air.</p>
+  </div>
+  <div id="wl-row1" style="position:absolute; top:434px; left:1032px; width:696px; display:flex; flex-direction:column; gap:4px; padding:0 0 0 26px; border-left:4px solid #e9733f">
+    <div style="display:flex; flex-direction:row; gap:18px; align-items:baseline">
+      <h3 style="font-family:'National Park', sans-serif; font-size:36px; font-weight:700; line-height:1.1; text-transform:uppercase; color:#8fbccb">Andes</h3>
+      <p style="font-family:'Nothing You Could Do', 'Brush Script MT', serif; font-size:30px; line-height:1.1; color:#e9733f">the longest range</p>
+    </div>
+    <p style="font-family:Barlow, Arial, sans-serif; font-size:30px; font-weight:500; line-height:1.3; color:#eef2f1">Andean condor, guanaco, vicuña, puma</p>
+    <p style="font-family:Barlow, Arial, sans-serif; font-size:26px; line-height:1.35; color:#a9bcc4">Vicuñas grow some of the finest wool on Earth.</p>
+  </div>
+  <div id="wl-row2" style="position:absolute; top:590px; left:1032px; width:696px; display:flex; flex-direction:column; gap:4px; padding:0 0 0 26px; border-left:4px solid #e9733f">
+    <div style="display:flex; flex-direction:row; gap:18px; align-items:baseline">
+      <h3 style="font-family:'National Park', sans-serif; font-size:36px; font-weight:700; line-height:1.1; text-transform:uppercase; color:#8fbccb">Alps</h3>
+      <p style="font-family:'Nothing You Could Do', 'Brush Script MT', serif; font-size:30px; line-height:1.1; color:#e9733f">Europe’s backbone</p>
+    </div>
+    <p style="font-family:Barlow, Arial, sans-serif; font-size:30px; font-weight:500; line-height:1.3; color:#eef2f1">Alpine ibex, chamois, marmot, golden eagle</p>
+    <p style="font-family:Barlow, Arial, sans-serif; font-size:26px; line-height:1.35; color:#a9bcc4">Marmots sleep underground for up to six months in winter.</p>
+  </div>
+  <div id="wl-row3" style="position:absolute; top:746px; left:1032px; width:696px; display:flex; flex-direction:column; gap:4px; padding:0 0 0 26px; border-left:4px solid #e9733f">
+    <div style="display:flex; flex-direction:row; gap:18px; align-items:baseline">
+      <h3 style="font-family:'National Park', sans-serif; font-size:36px; font-weight:700; line-height:1.1; text-transform:uppercase; color:#8fbccb">Rockies</h3>
+      <p style="font-family:'Nothing You Could Do', 'Brush Script MT', serif; font-size:30px; line-height:1.1; color:#e9733f">from Canada to the USA</p>
+    </div>
+    <p style="font-family:Barlow, Arial, sans-serif; font-size:30px; font-weight:500; line-height:1.3; color:#eef2f1">mountain goat, bighorn sheep, grizzly bear, pika</p>
+    <p style="font-family:Barlow, Arial, sans-serif; font-size:26px; line-height:1.35; color:#a9bcc4">Pikas collect grass all summer and store it like hay.</p>
+  </div>
+</section>
+<section data-i="4" id="foodchain" data-transition="fade" style="background:#f4f1ea">
+  <img src="assets/food-leopard.jpg" alt="A snow leopard on its kill in the snow" style="position:absolute; top:0; left:0; width:820px; height:984px">
+  <div id="e2-1gtlaje" style="position:absolute; top:704px; left:0; width:820px; height:280px; display:flex; flex-direction:column; background:linear-gradient(180deg, #0e1c2600 0%, #0e1c26cc 100%)">
+  </div>
+  <p id="e4-1gtlaje" style="position:absolute; top:860px; left:64px; width:700px; font-family:'Nothing You Could Do', 'Brush Script MT', serif; font-size:36px; line-height:1.2; color:#fbf9f4; text-shadow:0 2px 10px #000000d9">a snow leopard guards its prey</p>
+  <div id="e5-1gtlaje" style="position:absolute; top:984px; left:0; width:1920px; height:96px; display:flex; flex-direction:column; background:#0a161e; border-top:1px solid #22384a">
+  </div>
+  <p id="e6-1gtlaje" style="position:absolute; top:1015px; left:192px; width:380px; font-family:'IBM Plex Mono', 'Courier New', monospace; font-size:24px; line-height:1.4; letter-spacing:2px; white-space:nowrap; color:#e9733f">▲ 4,000 M</p>
+  <div id="e7-1gtlaje" style="position:absolute; top:1031px; left:600px; width:720px; height:2px; display:flex; flex-direction:column; background:#2c4252">
+  </div>
+  <div id="e8-1gtlaje" style="position:absolute; top:1031px; left:600px; width:326px; height:2px; display:flex; flex-direction:column; background:#e9733f">
+  </div>
+  <div id="e9-1gtlaje" style="position:absolute; top:1025px; left:919px; width:14px; height:14px; display:flex; flex-direction:column; background:#e9733f; border-radius:256px">
+  </div>
+  <p id="e10-1gtlaje" style="position:absolute; top:1015px; left:1348px; width:380px; font-family:'IBM Plex Mono', 'Courier New', monospace; font-size:24px; line-height:1.4; letter-spacing:2px; text-align:right; white-space:nowrap; color:#8aa0ab">LIFE AT THE TOP · 05</p>
+  <div id="p1ec49a166830r1-b8b921fd" style="position:absolute; top:100px; left:919px; width:816px; height:760px; display:flex; flex-direction:column; gap:12px">
+    <p style="font-family:'IBM Plex Mono', 'Courier New', monospace; font-size:24px; letter-spacing:4px; text-transform:uppercase; color:#b4501f">Food chain</p>
+    <h2 style="font-family:'National Park', sans-serif; font-size:72px; font-weight:700; line-height:1.08; text-transform:uppercase; color:#0e1c26">Who eats whom?</h2>
+  </div>
+  <img src="assets/art-foodchain.png" alt="A food pyramid drawn as a mountain: plants at the wide base, herbivores in the middle and a few predators at the top. A dotted arrow shows scavengers like condors and vultures taking the leftovers back to the soil." id="p1ec49a166830r1_2-b8b921fd" style="position:absolute; top:264.94px; left:919px; width:913.54px; height:655.84px; object-fit:contain">
+</section>
+<section data-i="5" id="snowleopard" data-transition="fade" style="background:#0e1c26;color:#eef2f1;font-family:'Barlow', Arial, sans-serif;padding:112px 192px 208px;display:flex;flex-direction:column;gap:12px">
+<img src="assets/art-snow-leopard-framed.jpg" alt="A snow leopard on a rock with five labelled adaptations: big nose and lungs, thick fur up to 12 cm, a spotted grey coat for camouflage, a tail about 1 m long, and wide snowshoe paws." style="position:absolute;left:0;top:0;width:1920px;height:984px;object-fit:cover">
+<div style="width:400px;display:flex;flex-direction:column;gap:12px">
+<p style="font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;letter-spacing:4px;color:#e9733f;text-transform:uppercase">Animal 01</p>
+<h2 style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:72px;font-weight:700;line-height:1.05;text-transform:uppercase">Snow leopard</h2>
+<p style="font-size:28px;line-height:1.4;color:#a9bcc4"><i>Panthera uncia</i>, the “ghost of the mountains”</p>
+<div style="display:flex;flex-direction:column;gap:24px;padding:36px 0px 0px 0px">
+<div style="display:flex;flex-direction:column;gap:2px;border-left:3px solid #e9733f;padding:0px 0px 0px 20px">
+<p style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:40px;font-weight:700;line-height:1.1;white-space:nowrap">3,000–5,500 m</p>
+<p style="font-size:26px;line-height:1.4;color:#a9bcc4">where it lives</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:2px;border-left:3px solid #e9733f;padding:0px 0px 0px 20px">
+<p style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:40px;font-weight:700;line-height:1.1;white-space:nowrap">4,000–6,500</p>
+<p style="font-size:26px;line-height:1.4;color:#a9bcc4">left in the wild</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:2px;border-left:3px solid #e9733f;padding:0px 0px 0px 20px">
+<p style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:40px;font-weight:700;line-height:1.1;white-space:nowrap">Vulnerable</p>
+<p style="font-size:26px;line-height:1.4;color:#a9bcc4">IUCN Red List</p>
+</div>
+</div>
+</div>
+<div style="position:absolute;left:0;top:984px;width:1920px;height:96px;background:#0a161e;border-top:1px solid #22384a"></div>
+<p style="position:absolute;left:192px;top:1015px;width:380px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.4;letter-spacing:2px;color:#e9733f;white-space:nowrap">▲ 5,000 M</p>
+<div style="position:absolute;left:600px;top:1031px;width:720px;height:2px;background:#2c4252"></div>
+<div style="position:absolute;left:600px;top:1031px;width:407px;height:2px;background:#e9733f"></div>
+<div style="position:absolute;left:1000px;top:1025px;width:14px;height:14px;border-radius:50%;background:#e9733f"></div>
+<p style="position:absolute;left:1348px;top:1015px;width:380px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.4;letter-spacing:2px;color:#8aa0ab;text-align:right;white-space:nowrap">LIFE AT THE TOP · 06</p>
+</section>
+<section data-i="6" id="condor" data-transition="fade" style="background:#f4f1ea;color:#0e1c26;font-family:'Barlow', Arial, sans-serif;padding:112px 192px 208px;display:flex;flex-direction:column;gap:12px">
+<img src="assets/art-condor-plate.jpg" alt="An Andean condor with its wings spread on a snowy rock. A ruler above it marks a wingspan of up to 3.3 m; notes point to its bald head and sharp eyes and to its giant wings. Below: nature’s clean-up crew, it eats carrion (dead animals), which helps stop diseases." style="position:absolute;left:0;top:0;width:1920px;height:984px;object-fit:cover">
+<div style="width:400px;display:flex;flex-direction:column;gap:12px">
+<p style="font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;letter-spacing:4px;color:#b4501f;text-transform:uppercase">Animal 02</p>
+<h2 style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:72px;font-weight:700;line-height:1.05;text-transform:uppercase">Andean condor</h2>
+<p style="font-size:28px;line-height:1.4;color:#4a5a64"><i>Vultur gryphus</i>, one of the largest flying birds</p>
+<div style="display:flex;flex-direction:column;gap:24px;padding:36px 0px 0px 0px">
+<div style="display:flex;flex-direction:column;gap:2px;border-left:3px solid #b4501f;padding:0px 0px 0px 20px">
+<p style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:40px;font-weight:700;line-height:1.1;white-space:nowrap">3.3 m</p>
+<p style="font-size:26px;line-height:1.4;color:#4a5a64">wingspan</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:2px;border-left:3px solid #b4501f;padding:0px 0px 0px 20px">
+<p style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:40px;font-weight:700;line-height:1.1;white-space:nowrap">15 kg</p>
+<p style="font-size:26px;line-height:1.4;color:#4a5a64">top weight</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:2px;border-left:3px solid #b4501f;padding:0px 0px 0px 20px">
+<p style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:40px;font-weight:700;line-height:1.1;white-space:nowrap">Vulnerable</p>
+<p style="font-size:26px;line-height:1.4;color:#4a5a64">IUCN Red List</p>
+</div>
+</div>
+</div>
+<div style="position:absolute;left:0;top:984px;width:1920px;height:96px;background:#0a161e;border-top:1px solid #22384a"></div>
+<p style="position:absolute;left:192px;top:1015px;width:380px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.4;letter-spacing:2px;color:#e9733f;white-space:nowrap">▲ 6,000 M</p>
+<div style="position:absolute;left:600px;top:1031px;width:720px;height:2px;background:#2c4252"></div>
+<div style="position:absolute;left:600px;top:1031px;width:488px;height:2px;background:#e9733f"></div>
+<div style="position:absolute;left:1081px;top:1025px;width:14px;height:14px;border-radius:50%;background:#e9733f"></div>
+<p style="position:absolute;left:1348px;top:1015px;width:380px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.4;letter-spacing:2px;color:#8aa0ab;text-align:right;white-space:nowrap">LIFE AT THE TOP · 07</p>
+</section>
+<section data-i="7" id="threats" data-transition="fade" style="background:#0e1c26;color:#eef2f1;font-family:'Barlow', Arial, sans-serif;padding:112px 192px 208px;display:flex;flex-direction:column;justify-content:center;gap:12px">
+<img src="assets/threats.jpg" alt="The grey, rocky Ngozumpa Glacier next to the turquoise Gokyo Lake, Nepal" style="position:absolute;left:0;top:0;width:1920px;height:984px;object-fit:cover">
+<div style="position:absolute;left:0;top:0;width:1920px;height:984px;background:linear-gradient(90deg, rgba(14,28,38,0.97) 0%, rgba(14,28,38,0.93) 46%, rgba(14,28,38,0.35) 72%, rgba(14,28,38,0.1) 100%)"></div>
+<div style="width:808px;display:flex;flex-direction:column;gap:12px">
+<p style="font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;letter-spacing:4px;color:#e9733f;text-transform:uppercase">Threats</p>
+<h2 style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:72px;font-weight:700;line-height:1.05;text-transform:uppercase">Why are they in danger?</h2>
+<div style="display:flex;flex-direction:column;gap:28px;padding:28px 0px 0px 0px">
+<div style="display:flex;gap:24px">
+<p style="width:52px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.7;color:#e9733f">01</p>
+<div style="flex:1;display:flex;flex-direction:column;gap:4px">
+<h3 style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:32px;font-weight:700;line-height:1.2;text-transform:uppercase;color:#8fbccb">Climate change</h3>
+<p style="font-size:28px;line-height:1.4;color:#d6e0e3">Glaciers melt, and animals must move higher, until there is nowhere left to go.</p>
+</div>
+</div>
+<div style="display:flex;gap:24px">
+<p style="width:52px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.7;color:#e9733f">02</p>
+<div style="flex:1;display:flex;flex-direction:column;gap:4px">
+<h3 style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:32px;font-weight:700;line-height:1.2;text-transform:uppercase;color:#8fbccb">Poaching</h3>
+<p style="font-size:28px;line-height:1.4;color:#d6e0e3">Snow leopards are hunted illegally for their fur and bones.</p>
+</div>
+</div>
+<div style="display:flex;gap:24px">
+<p style="width:52px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.7;color:#e9733f">03</p>
+<div style="flex:1;display:flex;flex-direction:column;gap:4px">
+<h3 style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:32px;font-weight:700;line-height:1.2;text-transform:uppercase;color:#8fbccb">Conflict with people</h3>
+<p style="font-size:28px;line-height:1.4;color:#d6e0e3">Herders kill predators that attack their animals. Condors eat poison and lead.</p>
+</div>
+</div>
+<div style="display:flex;gap:24px">
+<p style="width:52px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.7;color:#e9733f">04</p>
+<div style="flex:1;display:flex;flex-direction:column;gap:4px">
+<h3 style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:32px;font-weight:700;line-height:1.2;text-transform:uppercase;color:#8fbccb">Losing their home</h3>
+<p style="font-size:28px;line-height:1.4;color:#d6e0e3">Mines, roads and too many farm animals destroy their habitat.</p>
+</div>
+</div>
+</div>
+</div>
+<p style="position:absolute;left:1248px;top:858px;width:480px;font-family:'Nothing You Could Do', cursive;font-size:36px;line-height:1.2;color:#fbf9f4;text-align:right;text-shadow:0px 2px 10px rgba(0,0,0,0.85)">a melting glacier in Nepal</p>
+<div style="position:absolute;left:0;top:984px;width:1920px;height:96px;background:#0a161e;border-top:1px solid #22384a"></div>
+<p style="position:absolute;left:192px;top:1015px;width:380px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.4;letter-spacing:2px;color:#e9733f;white-space:nowrap">▲ 7,000 M</p>
+<div style="position:absolute;left:600px;top:1031px;width:720px;height:2px;background:#2c4252"></div>
+<div style="position:absolute;left:600px;top:1031px;width:570px;height:2px;background:#e9733f"></div>
+<div style="position:absolute;left:1163px;top:1025px;width:14px;height:14px;border-radius:50%;background:#e9733f"></div>
+<p style="position:absolute;left:1348px;top:1015px;width:380px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.4;letter-spacing:2px;color:#8aa0ab;text-align:right;white-space:nowrap">LIFE AT THE TOP · 08</p>
+</section>
+<section data-i="8" id="protect" data-transition="fade" style="background:#f4f1ea;color:#0e1c26;font-family:'Barlow', Arial, sans-serif;padding:112px 192px 208px;display:grid;grid-template-columns:448px 1fr;gap:64px">
+<img src="assets/contours-dark.svg" alt="" style="position:absolute;left:0;top:0;width:1920px;height:984px;object-fit:cover;opacity:0.07">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;letter-spacing:4px;color:#b4501f;text-transform:uppercase">Protection</p>
+<h2 style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:72px;font-weight:700;line-height:1.05;text-transform:uppercase">How can we protect them?</h2>
+<div style="flex:1;position:relative;display:flex;flex-direction:column;justify-content:end">
+<img src="assets/protect.jpg" alt="A small lake among pine trees and granite rocks, with snowy peaks behind, Rocky Mountain National Park" style="width:448px;height:360px;object-fit:cover;border-radius:18px">
+<p style="position:absolute;left:24px;bottom:14px;width:400px;font-family:'Nothing You Could Do', cursive;font-size:34px;line-height:1.2;color:#fbf9f4;text-shadow:0px 2px 10px rgba(0,0,0,0.85)">a national park, USA</p>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px">
+<div style="display:flex;flex-direction:column;gap:12px;background:#fbf9f4;border:1px solid #ddd6c8;border-top:5px solid #2f6478;padding:28px;border-radius:16px">
+<svg aria-label="Shield with a pine tree" width="88" height="88" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="31" fill="#e3ecef"/><g fill="none" stroke="#2f6478" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M32 10 L50 17 V31 C50 42 42 50 32 54 C22 50 14 42 14 31 V17 Z"/><path d="M32 20 L40 32 H24 Z"/><path d="M32 27 L42 41 H22 Z"/><path d="M32 41 V47"/></g><circle cx="47" cy="16" r="4" fill="#e9733f"/></svg>
+<h3 style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:30px;font-weight:700;line-height:1.1;text-transform:uppercase;color:#0e1c26">Protected areas</h3>
+<p style="font-size:28px;line-height:1.35;color:#3d4f5a">National parks keep whole habitats safe.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#fbf9f4;border:1px solid #ddd6c8;border-top:5px solid #2f6478;padding:28px;border-radius:16px">
+<svg aria-label="A fenced pen with a roof" width="88" height="88" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="31" fill="#e3ecef"/><g fill="none" stroke="#2f6478" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M10 30 L32 14 L54 30"/><path d="M16 27 V50 M27 22 V50 M37 22 V50 M48 27 V50"/><path d="M12 36 H52 M12 45 H52"/></g><circle cx="32" cy="14" r="4" fill="#e9733f"/></svg>
+<h3 style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:30px;font-weight:700;line-height:1.1;text-transform:uppercase;color:#0e1c26">Safe corrals</h3>
+<p style="font-size:28px;line-height:1.35;color:#3d4f5a">Covered pens keep farm animals safe at night.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#fbf9f4;border:1px solid #ddd6c8;border-top:5px solid #2f6478;padding:28px;border-radius:16px">
+<svg aria-label="A paw print crossed out" width="88" height="88" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="31" fill="#e3ecef"/><g fill="#2f6478"><circle cx="23" cy="25" r="4"/><circle cx="32" cy="21" r="4"/><circle cx="41" cy="25" r="4"/><ellipse cx="32" cy="37" rx="9" ry="7"/></g><circle cx="32" cy="32" r="21" fill="none" stroke="#e9733f" stroke-width="3.5"/><path d="M17 17 L47 47" stroke="#e9733f" stroke-width="3.5" stroke-linecap="round"/></svg>
+<h3 style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:30px;font-weight:700;line-height:1.1;text-transform:uppercase;color:#0e1c26">Stop poaching</h3>
+<p style="font-size:28px;line-height:1.35;color:#3d4f5a">Rangers and strong laws stop illegal hunting.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#fbf9f4;border:1px solid #ddd6c8;border-top:5px solid #2f6478;padding:28px;border-radius:16px">
+<svg aria-label="A drop of poison crossed out" width="88" height="88" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="31" fill="#e3ecef"/><path d="M32 12 C32 12 19 28 19 38 A13 13 0 0 0 45 38 C45 28 32 12 32 12 Z" fill="none" stroke="#2f6478" stroke-width="3" stroke-linejoin="round"/><path d="M27 38 A5 5 0 0 0 32 43" fill="none" stroke="#2f6478" stroke-width="3" stroke-linecap="round"/><path d="M16 50 L48 14" stroke="#e9733f" stroke-width="3.5" stroke-linecap="round"/></svg>
+<h3 style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:30px;font-weight:700;line-height:1.1;text-transform:uppercase;color:#0e1c26">No poison</h3>
+<p style="font-size:28px;line-height:1.35;color:#3d4f5a">No poisoned bait or lead, so condors eat safely.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#fbf9f4;border:1px solid #ddd6c8;border-top:5px solid #2f6478;padding:28px;border-radius:16px">
+<svg aria-label="An egg and a bird flying away" width="88" height="88" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="31" fill="#e3ecef"/><g fill="none" stroke="#2f6478" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M25 22 C18 22 14 36 14 42 C14 48 19 53 25 53 C31 53 36 48 36 42 C36 36 32 22 25 22 Z"/><path d="M18 40 L22 36 L26 41 L30 37 L33 41"/></g><path d="M36 22 Q42 14 48 21 Q53 14 58 17" fill="none" stroke="#e9733f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<h3 style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:30px;font-weight:700;line-height:1.1;text-transform:uppercase;color:#0e1c26">Breed and release</h3>
+<p style="font-size:28px;line-height:1.35;color:#3d4f5a">Zoos raise condor chicks and set them free.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#fbf9f4;border:1px solid #ddd6c8;border-top:5px solid #2f6478;padding:28px;border-radius:16px">
+<svg aria-label="A thermometer with an arrow pointing down" width="88" height="88" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="31" fill="#e3ecef"/><g fill="none" stroke="#2f6478" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 14 A5 5 0 0 1 32 14 V36 A9 9 0 1 1 22 36 Z"/><path d="M27 22 V42"/></g><circle cx="27" cy="43" r="4" fill="#2f6478"/><g fill="none" stroke="#e9733f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M45 16 V36"/><path d="M39 30 L45 36 L51 30"/></g></svg>
+<h3 style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:30px;font-weight:700;line-height:1.1;text-transform:uppercase;color:#0e1c26">Cool the planet</h3>
+<p style="font-size:28px;line-height:1.35;color:#3d4f5a">Save energy, walk or cycle, and waste less.</p>
+</div>
+</div>
+<div style="position:absolute;left:0;top:984px;width:1920px;height:96px;background:#0a161e;border-top:1px solid #22384a"></div>
+<p style="position:absolute;left:192px;top:1015px;width:380px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.4;letter-spacing:2px;color:#e9733f;white-space:nowrap">▲ 8,000 M</p>
+<div style="position:absolute;left:600px;top:1031px;width:720px;height:2px;background:#2c4252"></div>
+<div style="position:absolute;left:600px;top:1031px;width:651px;height:2px;background:#e9733f"></div>
+<div style="position:absolute;left:1244px;top:1025px;width:14px;height:14px;border-radius:50%;background:#e9733f"></div>
+<p style="position:absolute;left:1348px;top:1015px;width:380px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.4;letter-spacing:2px;color:#8aa0ab;text-align:right;white-space:nowrap">LIFE AT THE TOP · 09</p>
+</section>
+<section data-i="9" id="summit" data-transition="fade" style="background:#0e1c26;color:#eef2f1;font-family:'Barlow', Arial, sans-serif;padding:112px 192px 208px;display:flex;flex-direction:column;justify-content:space-between;gap:16px">
+<img src="assets/summit.jpg" alt="An Andean condor flying past the icy spires of Cerro Torre, Patagonia" style="position:absolute;left:0;top:0;width:1920px;height:984px;object-fit:cover">
+<div style="position:absolute;left:0;top:0;width:1920px;height:984px;background:linear-gradient(180deg, rgba(14,28,38,0.88) 0%, rgba(14,28,38,0.3) 30%, rgba(14,28,38,0.2) 46%, rgba(14,28,38,0.9) 66%, #0e1c26 100%)"></div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;letter-spacing:4px;color:#e9733f;text-transform:uppercase">▲ Summit · 8,849 m</p>
+<h2 style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:72px;font-weight:700;line-height:1.08;text-transform:uppercase">Fun facts from the top</h2>
+</div>
+<div style="display:flex;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:rgba(14,28,38,0.82);border-top:4px solid #e9733f;padding:28px;border-radius:0px 0px 16px 16px">
+<p style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:64px;font-weight:700;line-height:1;color:#e9733f;white-space:nowrap">172 km</p>
+<p style="font-size:28px;line-height:1.35;color:#d6e0e3">A condor flew 172 km in five hours without flapping once.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:rgba(14,28,38,0.82);border-top:4px solid #e9733f;padding:28px;border-radius:0px 0px 16px 16px">
+<p style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:64px;font-weight:700;line-height:1;color:#e9733f;white-space:nowrap">0 roars</p>
+<p style="font-size:28px;line-height:1.35;color:#d6e0e3">Snow leopards can’t roar. They make a soft “chuff”.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:rgba(14,28,38,0.82);border-top:4px solid #e9733f;padding:28px;border-radius:0px 0px 16px 16px">
+<p style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:64px;font-weight:700;line-height:1;color:#e9733f;white-space:nowrap">≈ 90°</p>
+<p style="font-size:28px;line-height:1.35;color:#d6e0e3">Ibex climb almost vertical dam walls to lick salt.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:rgba(14,28,38,0.82);border-top:4px solid #e9733f;padding:28px;border-radius:0px 0px 16px 16px">
+<p style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:64px;font-weight:700;line-height:1;color:#e9733f;white-space:nowrap">85%</p>
+<p style="font-size:28px;line-height:1.35;color:#d6e0e3">of bird, mammal and amphibian species live in mountains.</p>
+</div>
+</div>
+<div style="position:absolute;left:0;top:984px;width:1920px;height:96px;background:#0a161e;border-top:1px solid #22384a"></div>
+<p style="position:absolute;left:192px;top:1015px;width:380px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.4;letter-spacing:2px;color:#e9733f;white-space:nowrap">▲ SUMMIT · 8,849 M</p>
+<div style="position:absolute;left:600px;top:1031px;width:720px;height:2px;background:#e9733f"></div>
+<div style="position:absolute;left:1313px;top:1025px;width:14px;height:14px;border-radius:50%;background:#e9733f"></div>
+<p style="position:absolute;left:1348px;top:1015px;width:380px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.4;letter-spacing:2px;color:#8aa0ab;text-align:right;white-space:nowrap">LIFE AT THE TOP · 10</p>
+</section>
+<section data-i="10" id="thanks" data-transition="fade" style="background:#0e1c26;color:#eef2f1;font-family:'Barlow', Arial, sans-serif;padding:112px 192px 208px;display:flex;flex-direction:column;justify-content:end;gap:24px">
+<img src="assets/thanks.jpg" alt="Mount Fitz Roy glowing orange at sunset above a lake, Patagonia" style="position:absolute;left:0;top:0;width:1920px;height:984px;object-fit:cover">
+<div style="position:absolute;left:0;top:0;width:1920px;height:984px;background:linear-gradient(180deg, rgba(14,28,38,0.05) 20%, rgba(14,28,38,0.78) 52%, #0e1c26 84%)"></div>
+<img src="assets/contours-light.svg" alt="" style="position:absolute;left:0;top:0;width:1920px;height:984px;object-fit:cover;opacity:0.1">
+<h1 style="font-family:'National Park', 'Arial Narrow', sans-serif;font-size:160px;font-weight:700;line-height:0.95;text-transform:uppercase;letter-spacing:-1px">Thank you!</h1>
+<div style="display:flex;gap:16px;flex-wrap:wrap">
+<p style="font-size:32px;line-height:1.3;color:#eef2f1;background:#172b38;border:1px solid #2c4252;padding:10px 26px;border-radius:999px">[Student 1]</p>
+<p style="font-size:32px;line-height:1.3;color:#eef2f1;background:#172b38;border:1px solid #2c4252;padding:10px 26px;border-radius:999px">[Student 2]</p>
+<p style="font-size:32px;line-height:1.3;color:#eef2f1;background:#172b38;border:1px solid #2c4252;padding:10px 26px;border-radius:999px">[Student 3]</p>
+<p style="font-size:32px;line-height:1.3;color:#eef2f1;background:#172b38;border:1px solid #2c4252;padding:10px 26px;border-radius:999px">[Student 4]</p>
+<p style="font-size:32px;line-height:1.3;color:#eef2f1;background:#172b38;border:1px solid #2c4252;padding:10px 26px;border-radius:999px">[Student 5]</p>
+</div>
+<p style="font-family:'Nothing You Could Do', cursive;font-size:56px;line-height:1.3;color:#e9733f;padding:8px 0px 0px 0px">Any questions?</p>
+<div style="position:absolute;left:0;top:984px;width:1920px;height:96px;background:#0a161e;border-top:1px solid #22384a"></div>
+<p style="position:absolute;left:192px;top:1015px;width:380px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.4;letter-spacing:2px;color:#e9733f;white-space:nowrap">▼ BACK AT BASE CAMP</p>
+<div style="position:absolute;left:600px;top:1031px;width:720px;height:2px;background:#2c4252"></div>
+<div style="position:absolute;left:593px;top:1025px;width:14px;height:14px;border-radius:50%;background:#e9733f"></div>
+<p style="position:absolute;left:1348px;top:1015px;width:380px;font-family:'IBM Plex Mono', 'Courier New', monospace;font-size:24px;line-height:1.4;letter-spacing:2px;color:#8aa0ab;text-align:right;white-space:nowrap">LIFE AT THE TOP · 11</p>
+</section>
+<div id="mist"></div>
+</div></div>
+
+<div id="tools" class="chip" role="toolbar" aria-label="Presentation controls">
+  <button id="prev" type="button" aria-label="Previous slide">◀</button>
+  <span id="count" aria-live="polite" style="padding:6px 4px">01 / 11</span>
+  <button id="next" type="button" aria-label="Next slide">▶</button>
+  <button id="notesBtn" type="button" aria-pressed="false">Notas</button>
+  <button id="fsBtn" type="button">Tela cheia</button>
+</div>
+<div id="hint" class="chip">← → ou toque para avançar · N notas · F tela cheia</div>
+<div id="notes" hidden></div>
+
+<script>
+(() => {
+  const NOTES = ["STUDENT 1 (about 20 seconds)\nGood morning, everyone! We are Group 7, and our topic is mountains and high-altitude regions. Today we are going to climb from “base camp” all the way to the summit. Look at the bottom of each slide: the altitude goes up as our presentation goes on. On the way, we will talk about the Andes, the Himalayas, the Alps and the Rocky Mountains, and about two amazing animals that live there.", "STUDENT 1 (about 30 seconds) Mountains are found on every continent. We chose four famous ranges. The Himalayas, in Asia, have the highest mountain in the world: Mount Everest, at 8,849 metres. The Andes, in South America, are the longest mountain range on any continent, about 7,000 kilometres. The Alps are in the middle of Europe, and the Rocky Mountains go from Canada to the south of the United States. The orange bars show how high the tallest peak of each range is.", "STUDENT 2 (about 30 seconds) What makes mountains special? Look at this drawing. Mountains have zones: forest at the bottom, then alpine meadows above the tree line, then bare rock, and snow and ice at the top. The higher you go, the colder it gets: about six and a half degrees colder for every thousand metres, so it can be minus 32 degrees at the top of Everest. The air is also thinner. The dots show the oxygen: at 5,500 metres there is only half the air. Above 8,000 metres is the “death zone”, where people can’t survive for long.", "STUDENT 2 (about 30 seconds)\nEven with all these difficulties, many animals live in the mountains. In the Himalayas there are snow leopards, red pandas and yaks, which have long, shaggy fur and huge lungs for the thin air. The Andes have condors, pumas, guanacos, like the one in this photo, and vicuñas, which grow some of the finest wool in the world. In the Alps you can see the Alpine ibex and marmots, which sleep underground for up to six months in winter. And in the Rocky Mountains there are mountain goats, grizzly bears and pikas, small animals that collect grass all summer and store it like hay.", "STUDENT 3 (about 30 seconds) How does the food chain work in the mountains? It looks like a mountain too. At the bottom there are lots of plants: grasses, mosses and lichens. Herbivores, like pikas, marmots and ibex, eat the plants. They are the prey. At the top there are only a few predators, like the snow leopard and the puma, that hunt the herbivores. Energy goes up the mountain. Then scavengers, like condors and vultures, eat the leftovers, and what is left goes back to the soil. In the photo, a snow leopard is guarding the prey it caught.", "STUDENT 3 (about 35 seconds)\nOur first animal is the snow leopard. People call it the “ghost of the mountains” because it is very hard to see. It lives between 3,000 and 5,500 metres, and there are only about 4,000 to 6,500 left in the wild. Let’s look at its body. Its big nose warms the icy air, and big lungs get more oxygen. Its fur is very thick, up to 12 centimetres on its belly. Its grey, spotted coat is perfect camouflage on rocks. Its tail is about one metre long: it helps with balance, and it works like a scarf when it sleeps. And its wide, furry paws work like snowshoes.", "STUDENT 4 (about 30 seconds)\nOur second animal is the Andean condor. It is one of the largest flying birds on Earth: its wings can be 3.3 metres wide, and it can weigh up to 15 kilos. Its giant wings let it glide on warm air for hours, almost without flapping. It has no feathers on its head, so it stays clean when it eats, and it has very sharp eyes to find food from far away. The condor is a scavenger, so it is nature’s clean-up crew: by eating dead animals, it helps stop diseases.", "STUDENT 4 (about 30 seconds)\nUnfortunately, mountain animals are in danger. The biggest threat is climate change. Glaciers, like the one in this photo in Nepal, are melting, and animals have to move higher to find cold places, until there is nowhere higher to go. Snow leopards are also killed by poachers for their fur and bones. Sometimes herders kill predators that attack their animals, and condors die when they eat poisoned meat or meat with lead from bullets. Mines, roads and too many farm animals also destroy their homes.", "STUDENT 5 (about 30 seconds)\nSo, what can we do? First, protected areas, like national parks, keep habitats safe. Second, covered corrals protect farm animals at night, so herders don’t need to kill snow leopards. Third, we need park rangers and strong laws against poaching. Fourth, nobody should use poison or lead bullets, so condors can eat safely. Fifth, some zoos raise condor chicks and release them into the wild. And finally, all of us can help cool the planet: save energy, walk or cycle more, and waste less.", "STUDENT 5 (about 25 seconds)\nWe made it to the summit! Here are some fun facts. An Andean condor once flew 172 kilometres in five hours without flapping its wings even once. Snow leopards can’t roar: they make a soft sound called a “chuff”. In Italy, Alpine ibex climb almost vertical dam walls to lick salt from the stones. And mountain regions are home to more than 85 percent of the world’s species of birds, mammals and amphibians.", "STUDENT 5, or the whole group together (about 10 seconds)\nThat is the end of our expedition. Mountains are beautiful, but they are fragile, and the animals that live there need our help. Thank you for listening! Do you have any questions?"];
+  const BASES = ["#0e1c26", "#0e1c26", "#f4f1ea", "#0e1c26", "#f4f1ea", "#0e1c26", "#f4f1ea", "#0e1c26", "#f4f1ea", "#0e1c26", "#0e1c26"];
+  const stage = document.getElementById('stage');
+  const slides = [...stage.querySelectorAll('section[data-i]')];
+  const mist = document.getElementById('mist');
+  const count = document.getElementById('count');
+  const notesBox = document.getElementById('notes');
+  const notesBtn = document.getElementById('notesBtn');
+  const N = slides.length;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+
+  // ---------- scale the 1920x1080 stage to the window ----------
+  function fit() {
+    const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+    stage.style.transform = `scale(${s})`;
+    stage.style.margin = `${(innerHeight - 1080) / 2}px ${(innerWidth - 1920) / 2}px`;
+  }
+  addEventListener('resize', fit); fit();
+
+  // ---------- colour helpers ----------
+  const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+  const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a.toFixed(3)})`;
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;   // easeInOutCubic
+  const lum = c => (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255;
+
+  function setMask(el, value) { el.style.webkitMaskImage = value; el.style.maskImage = value; }
+  function clear(el) { setMask(el, ''); el.style.transform = ''; el.style.opacity = ''; el.style.filter = ''; el.style.zIndex = ''; }
+
+  // ---------- the transition ----------
+  // The next slide climbs in from below (backwards: drops in from above) through a soft
+  // gradient mask. A band of mist, tinted halfway between the two grounds, rides the edge
+  // so a dark slide never snaps to a light one. The bigger the jump in brightness,
+  // the wider the feather and the longer the move.
+  let cur = 0, anim = null;
+
+  function show(i) {
+    slides.forEach((s, k) => { s.classList.toggle('on', k === i); clear(s); });
+    mist.style.opacity = 0;
+    cur = i;
+    count.textContent = `${String(i + 1).padStart(2, '0')} / ${N}`;
+    notesBox.innerHTML = `<b>NOTAS · SLIDE ${i + 1}</b>` + escapeHtml(NOTES[i] || '');
+    try { history.replaceState(null, '', '#slide-' + (i + 1)); } catch (e) {}
+  }
+
+  function go(to) {
+    to = Math.max(0, Math.min(N - 1, to));
+    if (to === cur && !anim) return;
+    if (anim) { cancelAnimationFrame(anim.raf); anim.done(); }
+    if (to === cur) return;
+    const from = cur, dir = to > from ? 1 : -1;
+    const a = slides[from], b = slides[to];
+    const ca = hex(BASES[from]), cb = hex(BASES[to]);
+    const jump = Math.abs(lum(ca) - lum(cb));                 // 0 (same ground) .. ~0.85 (dark <-> paper)
+    const F = 0.32 + jump * 0.38;                              // feather, as a share of the slide height
+    const dur = reduce.matches ? 260 : 950 + jump * 650;
+    const mid = mix(ca, cb, 0.5);
+
+    b.classList.add('on'); a.classList.add('on');
+    a.style.zIndex = 1; b.style.zIndex = 2;
+    const side = dir > 0 ? 'to top' : 'to bottom';
+    const t0 = performance.now();
+
+    function frame(now) {
+      const t = Math.min(1, (now - t0) / dur), e = ease(t);
+      if (reduce.matches) {
+        b.style.opacity = e;
+      } else {
+        // edge of the reveal travels from -F to 1 (share of the height)
+        const edge = -F + e * (1 + F);
+        const solid = (edge * 100).toFixed(2), clearAt = ((edge + F) * 100).toFixed(2);
+        setMask(b, `linear-gradient(${side}, #000 ${solid}%, transparent ${clearAt}%)`);
+        b.style.transform = `translateY(${(dir * 36 * (1 - e)).toFixed(2)}px)`;
+        a.style.transform = `translateY(${(-dir * 22 * e).toFixed(2)}px)`;
+        a.style.filter = `brightness(${(1 - 0.18 * Math.sin(Math.PI * e) * jump).toFixed(3)})`;
+        // mist: transparent / tinted / transparent, centred on the feather
+        const peak = 0.62 * Math.sin(Math.PI * t) * (0.35 + jump);
+        const m0 = ((edge - 0.08) * 100).toFixed(2), m1 = ((edge + F / 2) * 100).toFixed(2), m2 = ((edge + F + 0.08) * 100).toFixed(2);
+        mist.style.background = `linear-gradient(${side}, ${rgba(mid, 0)} ${m0}%, ${rgba(mid, peak)} ${m1}%, ${rgba(mid, 0)} ${m2}%)`;
+        mist.style.opacity = 1;
+      }
+      if (t < 1) anim.raf = requestAnimationFrame(frame); else anim.done();
+    }
+    anim = { raf: 0, done: () => { anim = null; show(to); } };
+    anim.raf = requestAnimationFrame(frame);
+    cur = to;
+    count.textContent = `${String(to + 1).padStart(2, '0')} / ${N}`;
+  }
+
+  function escapeHtml(s) { return s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])); }
+
+  // ---------- input ----------
+  const next = () => go((anim ? cur : cur) + 1), prev = () => go(cur - 1);
+  document.getElementById('next').addEventListener('click', e => { e.stopPropagation(); next(); });
+  document.getElementById('prev').addEventListener('click', e => { e.stopPropagation(); prev(); });
+  notesBtn.addEventListener('click', e => { e.stopPropagation(); toggleNotes(); });
+  document.getElementById('fsBtn').addEventListener('click', e => { e.stopPropagation(); toggleFs(); });
+  notesBox.addEventListener('click', e => e.stopPropagation());
+
+  function toggleNotes() { notesBox.hidden = !notesBox.hidden; notesBtn.setAttribute('aria-pressed', String(!notesBox.hidden)); }
+  function toggleFs() {
+    try {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen().catch(() => {});
+    } catch (e) {}
+  }
+
+  addEventListener('keydown', e => {
+    if (['ArrowRight', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); next(); }
+    else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') go(0);
+    else if (e.key === 'End') go(N - 1);
+    else if (e.key === 'n' || e.key === 'N') toggleNotes();
+    else if (e.key === 'f' || e.key === 'F') toggleFs();
+  });
+  document.getElementById('frame').addEventListener('click', e => { (e.clientX < innerWidth / 3 ? prev : next)(); });
+  let tx = null, ty = null;
+  addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+  addEventListener('touchend', e => {
+    if (tx === null) return;
+    const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { (dx < 0 ? next : prev)(); }
+    tx = null;
+  });
+  setTimeout(() => document.getElementById('hint').classList.add('gone'), 4500);
+  // the control pill hides while presenting and comes back when the pointer moves
+  const tools = document.getElementById('tools'); let idle;
+  function wake() { tools.classList.remove('gone'); clearTimeout(idle); idle = setTimeout(() => { if (notesBox.hidden) tools.classList.add('gone'); }, 3000); }
+  addEventListener('pointermove', wake); addEventListener('keydown', wake); wake();
+
+  // ---------- start ----------
+  const m = /^#slide-(\d+)$/.exec(location.hash);
+  show(m ? Math.max(0, Math.min(N - 1, +m[1] - 1)) : 0);
+  addEventListener('hashchange', () => {
+    const h = /^#slide-(\d+)$/.exec(location.hash);
+    if (h && +h[1] - 1 !== cur) go(+h[1] - 1);
+  });
+})();
+</script>
