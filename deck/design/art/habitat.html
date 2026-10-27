@@ -1,0 +1,91 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=National+Park:wght@400;700&family=IBM+Plex+Mono:wght@400;500&family=Nothing+You+Could+Do&display=swap">
+<style>
+  html,body{margin:0;width:1920px;height:984px;background:#f4f1ea;overflow:hidden}
+  svg{display:block}
+  .lbl{font-family:'National Park',sans-serif;font-weight:700;font-size:26px;letter-spacing:1.5px;text-transform:uppercase}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:24px}
+  .hand{font-family:'Nothing You Could Do',cursive;font-size:34px}
+</style></head>
+<body>
+<svg id="s" width="1920" height="984" viewBox="0 0 1920 984" xmlns="http://www.w3.org/2000/svg"></svg>
+<script>
+const NS='http://www.w3.org/2000/svg', S=document.getElementById('s');
+const el=(t,a,p=S)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e};
+let seed=11;const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646};
+const Y=a=>900-a*(690/9000);
+const INK='#0e1c26',GLOW='#e9733f',PAPER='#f4f1ea';
+
+// sky
+const defs=el('defs',{});
+const sky=el('linearGradient',{id:'sky',x1:0,y1:0,x2:0,y2:1},defs);
+el('stop',{offset:'0',['stop-color']:'#e3ecef'},sky);el('stop',{offset:'0.7',['stop-color']:PAPER},sky);
+el('rect',{x:0,y:0,width:1920,height:984,fill:'url(#sky)'});
+// faint contour rings in the sky
+for(let i=1;i<14;i++){let d='';for(let j=0;j<=90;j++){const t=j/90*Math.PI*2;const r=i*38*(1+0.08*Math.sin(3*t+i*.4)+0.05*Math.sin(5*t+1));d+=(j?'L':'M')+(1500+r*1.3*Math.cos(t)).toFixed(1)+' '+(140+r*Math.sin(t)).toFixed(1)}el('path',{d:d+'Z',fill:'none',stroke:'#c9d6db',['stroke-width']:i%5?1:2,opacity:.55})}
+
+// distant ranges
+function ridge(pts,fill,op){let d=`M${pts[0][0]} ${Y(pts[0][1])}`;pts.slice(1).forEach(p=>d+=` L${p[0]} ${Y(p[1])}`);d+=` L${pts[pts.length-1][0]} 984 L${pts[0][0]} 984Z`;return el('path',{d,fill,opacity:op})}
+ridge([[-20,0],[120,2600],[260,3900],[340,3500],[470,5200],[560,4700],[700,6200],[820,5100],[980,6900],[1100,6100],[1260,7300],[1400,6000],[1560,6700],[1700,5200],[1940,3800]],'#d4dfe3',1);
+ridge([[-20,0],[160,1800],[300,2900],[420,2500],[600,4100],[760,3600],[900,5000],[1300,4300],[1480,5400],[1640,4100],[1800,4600],[1940,2600]],'#c3d2d8',1);
+
+// main massif
+const M=[[-30,0],[60,500],[180,900],[280,1400],[360,1250],[450,1900],[540,2400],[620,2250],[700,3050],[780,3750],[840,3550],[910,4650],[985,5650],[1040,5450],[1105,7150],[1180,8849],[1228,7950],[1262,8250],[1318,6650],[1366,5850],[1398,6050],[1442,4250],[1486,3050],[1528,1850],[1576,950],[1622,320],[1660,0]];
+let md=`M${M[0][0]} ${Y(M[0][1])}`;M.slice(1).forEach(p=>md+=` L${p[0]} ${Y(p[1]).toFixed(1)}`);md+=' L1760 984 L-30 984Z';
+const clip=el('clipPath',{id:'m'},defs);el('path',{d:md},clip);
+const G=el('g',{transform:'matrix(0.95 0 0 1 0 0)'});
+const massif=el('path',{d:md,fill:'#7f8b92'},G);
+const g=el('g',{['clip-path']:'url(#m)'},G);
+function band(a0,a1,fill){const w=x=>7*Math.sin(x/41)+4*Math.sin(x/13+1);let d='';for(let x=-40;x<=1680;x+=10)d+=(x>-40?'L':'M')+x+' '+(Y(a1)+(a1>8800?-200:w(x))).toFixed(1);for(let x=1680;x>=-40;x-=10)d+='L'+x+' '+(Y(a0)+(a0<1?120:w(x))).toFixed(1);el('path',{d:d+'Z',fill},g)}
+band(0,2500,'#2f5a4f');band(2500,4200,'#9aa977');band(4200,6200,'#7f8b92');band(6200,9000,'#fbfbf8');
+// rock hatching
+for(let i=0;i<220;i++){const x=600+rnd()*1000,y=Y(4300+rnd()*1900);el('line',{x1:x,y1:y,x2:x+10,y2:y+16,stroke:'#66737b',['stroke-width']:1.6,['stroke-linecap']:'round'},g)}
+// meadow flecks
+for(let i=0;i<160;i++){const x=480+rnd()*1100,y=Y(2550+rnd()*1600);el('circle',{cx:x,cy:y,r:1.8+rnd()*1.6,fill:rnd()<.5?'#c9cf9e':'#7d8f5e'},g)}
+// snow shading on the east faces
+el('path',{d:`M1180 ${Y(8849)} L1228 ${Y(7950)} L1262 ${Y(8250)} L1318 ${Y(6650)} L1366 ${Y(5850)} L1398 ${Y(6050)} L1420 ${Y(5200)} L1250 ${Y(6150)} L1205 ${Y(7600)}Z`,fill:'#d3e1e7'},g);
+el('path',{d:`M1105 ${Y(7150)} L1140 ${Y(7800)} L1120 ${Y(6600)} L1060 ${Y(6200)}Z`,fill:'#e2ecef'},g);
+// death zone hatch
+const hp=el('pattern',{id:'h',width:14,height:14,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},defs);el('rect',{width:5,height:14,fill:GLOW,opacity:.55},hp);
+el('rect',{x:0,y:0,width:1700,height:Y(8000),fill:'url(#h)'},g);
+// trees: a patient field of small firs
+const mp=document.querySelector('#m path');
+for(let i=0;i<1600;i++){const x=-20+rnd()*1680,a=rnd()*2350,y=Y(a);if(!massif.isPointInFill(new DOMPoint(x,y-26)))continue;const h=12+rnd()*12;el('path',{d:`M${x} ${y-h} L${x+h*.42} ${y} L${x-h*.42} ${y}Z`,fill:rnd()<.5?'#24483e':'#3d6b5c'},g)}
+el('path',{d:md,fill:'none',stroke:INK,['stroke-width']:2.2,['stroke-linejoin']:'round',opacity:.85},G);
+el('rect',{x:1596,y:0,width:324,height:984,fill:PAPER});el('line',{x1:1596,y1:120,x2:1596,y2:960,stroke:'#c9d6db',['stroke-width']:2});
+
+// tree line
+el('line',{x1:330,y1:Y(2500),x2:1500,y2:Y(2500),stroke:GLOW,['stroke-width']:3,['stroke-dasharray']:'14 10'});
+const t=(x,y,s,cls,fill,anchor='start')=>{const e=el('text',{x,y,class:cls,fill,['text-anchor']:anchor,stroke:cls=='hand'?PAPER:'none',['stroke-width']:cls=='hand'?8:0,['paint-order']:'stroke',['stroke-linejoin']:'round'});e.textContent=s;return e};
+t(316,Y(2500)+10,'tree line','hand',GLOW,'end');
+
+// zone labels with leaders
+function zlabel(alt,xs,txt,range){const y=Y(alt);el('line',{x1:xs-150,y1:y,x2:xs,y2:y,stroke:INK,['stroke-width']:1.5});el('circle',{cx:xs,cy:y,r:5,fill:INK});t(xs-162,y-6,txt,'lbl',INK,'end');t(xs-162,y+24,range,'mono','#4a5a64','end')}
+zlabel(6700,1040,'Snow & ice','6,200 m +');
+zlabel(5200,922,'Bare rock','4,200–6,200 m');
+zlabel(3400,722,'Alpine meadow','2,500–4,200 m');
+const fy=Y(1150);t(560,fy,'Forest','lbl','#f4f1ea');t(560,fy+28,'0–2,500 m','mono','#d7e3dc');
+// death zone note
+t(1210,Y(8849)-14,'“death zone”','hand',GLOW);t(1210,Y(8849)+20,'above 8,000 m','mono','#4a5a64');
+
+// gauges: altitude axis, temperature, oxygen dots
+const ax=1716;
+el('line',{x1:ax,y1:Y(0),x2:ax,y2:Y(9000),stroke:INK,['stroke-width']:2});
+for(let a=0;a<=9000;a+=1000){const y=Y(a);el('line',{x1:ax-10,y1:y,x2:ax,y2:y,stroke:INK,['stroke-width']:2});t(ax-18,y+8,a.toLocaleString('en-US'),'mono',INK,'end')}
+for(let a=500;a<9000;a+=1000){const y=Y(a);el('line',{x1:ax-5,y1:y,x2:ax,y2:y,stroke:INK,['stroke-width']:1.2})}
+const tg=el('linearGradient',{id:'tg',x1:0,y1:1,x2:0,y2:0},defs);el('stop',{offset:'0',['stop-color']:GLOW},tg);el('stop',{offset:'.45',['stop-color']:'#e8c9a8'},tg);el('stop',{offset:'1',['stop-color']:'#6fa7bd'},tg);
+el('rect',{x:1730,y:Y(8849),width:14,height:Y(0)-Y(8849),rx:7,fill:'url(#tg)'});
+// oxygen: density of dots follows air pressure
+for(let a=0;a<9000;a+=60){const p=Math.exp(-a/8300),n=Math.round(p*7);for(let k=0;k<n;k++){const x=1764+rnd()*118,y=Y(a)-rnd()*60*(690/9000)*1;el('circle',{cx:x,cy:y,r:3.1,fill:'#2f6478',opacity:.85})}}
+t(1737,Y(9000)-56,'°C','mono',INK,'middle');t(1823,Y(9000)-56,'OXYGEN','mono',INK,'middle');t(1698,Y(9000)-56,'ALT','mono',INK,'end');
+t(1737,Y(0)+44,'+25 °C','mono','#4a5a64','middle');
+// handwritten readings
+t(1575,Y(7900),'−32 °C at the top','hand',GLOW,'end');
+t(1575,Y(7900)+34,'−6.5 °C every 1,000 m','mono','#4a5a64','end');
+t(1737,Y(8849)-24,'−32','mono','#4a5a64','middle');
+// half oxygen marker
+const yh=Y(5500);el('line',{x1:1726,y1:yh,x2:1892,y2:yh,stroke:GLOW,['stroke-width']:3});
+t(1892,yh-14,'half the air','hand',GLOW,'end');
+</script>
+</body></html>
