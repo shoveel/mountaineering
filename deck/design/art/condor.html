@@ -4,9 +4,9 @@
 <style>
   html,body{margin:0;width:1920px;height:984px;background:#f4f1ea;overflow:hidden}
   svg{display:block}
-  .hand{font-family:'Nothing You Could Do',cursive;font-size:38px}
-  .big{font-family:'Nothing You Could Do',cursive;font-size:46px}
-  .body{font-family:'Barlow',sans-serif;font-size:27px}
+  .hand{font-family:'Nothing You Could Do',cursive;font-size:42px}
+  .big{font-family:'Nothing You Could Do',cursive;font-size:48px}
+  .body{font-family:'Barlow',sans-serif;font-size:29px}
   .mono{font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:2px}
 </style></head>
 <body>
@@ -14,38 +14,38 @@
 <script>
 const NS='http://www.w3.org/2000/svg',S=document.getElementById('s');
 const el=(t,a,p=S)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e};
-const INK='#0e1c26',GLOW='#c4521f',PAPER='#f4f1ea';
+const INK='#0e1c26',GLOW='#b4501f',PAPER='#f4f1ea';
 const t=(x,y,s,cls,fill,anchor='start')=>{const e=el('text',{x,y,class:cls,fill,['text-anchor']:anchor});e.textContent=s;return e};
 const defs=el('defs',{});
 for(let i=1;i<16;i++){let d='';for(let j=0;j<=90;j++){const a=j/90*Math.PI*2;const r=i*46*(1+0.07*Math.sin(3*a+i*.3)+0.05*Math.sin(5*a+2));d+=(j?'L':'M')+(1700+r*1.3*Math.cos(a)).toFixed(1)+' '+(860+r*Math.sin(a)).toFixed(1)}el('path',{d:d+'Z',fill:'none',stroke:'#2f6478',['stroke-width']:i%5?1:2,opacity:.08})}
 // photo: 1000x640 shown at 960x614
-const X=500,Yp=230,W=900,H=576,k=W/1000;
+const X=620,Yp=260,W=720,H=461,k=W/1000;
 const cp=el('clipPath',{id:'c'},defs);el('rect',{x:X,y:Yp,width:W,height:H,rx:18},cp);
 el('image',{href:'andean-condor.jpg',x:X,y:Yp,width:W,height:H,['clip-path']:'url(#c)',preserveAspectRatio:'xMidYMid slice'});
 el('rect',{x:X,y:Yp,width:W,height:H,rx:18,fill:'none',stroke:INK,['stroke-width']:2,opacity:.25});
 const P=(x,y)=>[X+x*k,Yp+y*k];
 // wingspan, measured
-const [lx]=P(182,0),[rx]=P(962,0),by=172;
+const [lx]=P(182,0),[rx]=P(962,0),by=Yp-56;
 el('line',{x1:lx,y1:by,x2:rx,y2:by,stroke:INK,['stroke-width']:2.4});
 [lx,rx].forEach(x=>{el('line',{x1:x,y1:by-14,x2:x,y2:by+14,stroke:INK,['stroke-width']:2.4});el('line',{x1:x,y1:by+14,x2:x,y2:P(0,272)[1],stroke:INK,['stroke-width']:1.4,['stroke-dasharray']:'4 7',opacity:.6})});
 for(let x=lx;x<=rx;x+=(rx-lx)/33)el('line',{x1:x,y1:by,x2:x,y2:by+7,stroke:INK,['stroke-width']:1.2});
 const lab=t((lx+rx)/2,by-20,'up to 3.3 m wingspan','big',GLOW,'middle');
 // callouts in the right column
 const notes=[
-  {pt:P(528,226),y:330,head:'bald head, sharp eyes',body:['stays clean when it eats','and spots food from far away']},
-  {pt:P(880,300),y:560,head:'giant wings',body:['glides on warm air','and hardly needs to flap']},
+  {pt:P(522,228),y:350,head:'bald head, sharp eyes',body:['stays clean when it eats,','spots food from far away']},
+  {pt:P(880,300),y:610,head:'giant wings',body:['glides on warm air,','hardly needs to flap']},
 ];
 notes.forEach((n,i)=>{
-  const [x,y]=n.pt,cx=1460;
+  const [x,y]=n.pt,cx=1400;
   const d=`M${x} ${y} L${cx-26} ${n.y-12} L${cx-8} ${n.y-12}`;
   el('path',{d,fill:'none',stroke:INK,['stroke-width']:6,opacity:.5,['stroke-linejoin']:'round'});
   el('path',{d,fill:'none',stroke:'#fbf9f4',['stroke-width']:2,['stroke-linejoin']:'round'});
   el('circle',{cx:x,cy:y,r:10,fill:'none',stroke:'#e9733f',['stroke-width']:3});
   el('circle',{cx:x,cy:y,r:4,fill:'#e9733f'});
   t(cx,n.y,n.head,'hand',GLOW);
-  n.body.forEach((b,j)=>t(cx,n.y+38+j*34,b,'body','#3d4f5a'));
+  n.body.forEach((b,j)=>t(cx,n.y+42+j*36,b,'body','#3d4f5a'));
 });
-t(X,Yp+H+58,'nature’s clean-up crew','hand',GLOW);
-t(X,Yp+H+96,'it eats carrion (dead animals), which helps stop diseases','body','#3d4f5a');
+t(X,Yp+H+64,'nature’s clean-up crew','hand',GLOW);
+t(X,Yp+H+106,'it eats carrion (dead animals), which helps stop diseases','body','#3d4f5a');
 </script>
 </body></html>

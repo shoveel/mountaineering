@@ -4,8 +4,8 @@
 <style>
   html,body{margin:0;width:1920px;height:984px;background:#0e1c26;overflow:hidden}
   svg{display:block}
-  .hand{font-family:'Nothing You Could Do',cursive;font-size:38px}
-  .body{font-family:'Barlow',sans-serif;font-size:27px}
+  .hand{font-family:'Nothing You Could Do',cursive;font-size:42px}
+  .body{font-family:'Barlow',sans-serif;font-size:29px}
   .mono{font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:2px}
 </style></head>
 <body>
@@ -19,34 +19,33 @@ const defs=el('defs',{});
 // faint contours
 for(let i=1;i<16;i++){let d='';for(let j=0;j<=90;j++){const a=j/90*Math.PI*2;const r=i*44*(1+0.07*Math.sin(3*a+i*.5)+0.05*Math.sin(5*a));d+=(j?'L':'M')+(1560+r*1.25*Math.cos(a)).toFixed(1)+' '+(520+r*Math.sin(a)).toFixed(1)}el('path',{d:d+'Z',fill:'none',stroke:'#8fbccb',['stroke-width']:i%5?1:2,opacity:.09})}
 // photo with feathered edges
-const PX=600,PW=560;
+const PX=630,PW=520;
 const m=el('linearGradient',{id:'f',x1:0,y1:0,x2:1,y2:0},defs);
 [[0,0],[.12,1],[.88,1],[1,0]].forEach(([o,a])=>el('stop',{offset:o,['stop-color']:'#fff',['stop-opacity']:a},m));
 const mk=el('mask',{id:'mk'},defs);el('rect',{x:PX,y:0,width:PW,height:984,fill:'url(#f)'},mk);
 el('image',{href:'snow-leopard-portrait.jpg',x:PX,y:0,width:PW,height:984,preserveAspectRatio:'xMidYMid slice',mask:'url(#mk)'});
 // specimen scale: a measured edge
-el('line',{x1:1196,y1:96,x2:1196,y2:900,stroke:'#8fbccb',['stroke-width']:1.5,opacity:.5});
-for(let y=96;y<=900;y+=20)el('line',{x1:1196,y1:y,x2:y%100==96%100?1210:1204,y2:y,stroke:'#8fbccb',['stroke-width']:1.5,opacity:.5});
+el('line',{x1:1186,y1:96,x2:1186,y2:900,stroke:'#8fbccb',['stroke-width']:1.5,opacity:.5});
+for(let y=96;y<=900;y+=20)el('line',{x1:1186,y1:y,x2:y%100==96%100?1200:1194,y2:y,stroke:'#8fbccb',['stroke-width']:1.5,opacity:.5});
 // photo coords: portrait 1080x1918 shown at 560x984 (slice): scale = max(560/1080, 984/1918)
 const sc=Math.max(PW/1080,984/1918),ox=PX+(PW-1080*sc)/2,oy=(984-1918*sc)/2;
 const P=(x,y)=>[ox+x*sc,oy+y*sc];
 const notes=[
-  {pt:P(517,742),y:150,head:'big nose & lungs',body:'warm the icy air and get more oxygen'},
+  {pt:P(517,742),y:170,head:'big nose & lungs',body:'warm the icy air and get more oxygen'},
   {pt:P(390,1040),y:340,head:'thick fur',body:'up to 12 cm long on its belly'},
-  {pt:P(640,1180),y:520,head:'spotted grey coat',body:'camouflage on rocks and snow'},
-  {pt:P(930,1420),y:700,head:'very long tail',body:'about 1 m: balance + a warm scarf'},
-  {pt:P(330,1545),y:880,head:'snowshoe paws',body:'wide and furry, so it doesn’t sink'},
+  {pt:P(640,1180),y:510,head:'spotted grey coat',body:'camouflage on rocks and snow'},
+  {pt:P(930,1420),y:680,head:'very long tail',body:'about 1 m: balance + a warm scarf'},
+  {pt:P(330,1545),y:850,head:'snowshoe paws',body:'wide and furry, so it doesn’t sink'},
 ];
 notes.forEach((n,i)=>{
-  const [x,y]=n.pt,lx=1236;
-  const d=`M${x} ${y} L${1196} ${n.y-12} L${lx-8} ${n.y-12}`;
+  const [x,y]=n.pt,lx=1226;
+  const d=`M${x} ${y} L${1186} ${n.y-12} L${lx-8} ${n.y-12}`;
   el('path',{d,fill:'none',stroke:INK,['stroke-width']:6,opacity:.55,['stroke-linejoin']:'round'});
   el('path',{d,fill:'none',stroke:'#f4f1ea',['stroke-width']:2,['stroke-linejoin']:'round'});
   el('circle',{cx:x,cy:y,r:11,fill:'none',stroke:GLOW,['stroke-width']:3});
   el('circle',{cx:x,cy:y,r:4,fill:GLOW});
   t(lx,n.y,n.head,'hand',GLOW);
-  t(lx,n.y+38,n.body,'body','#d6e0e3');
-  t(1840,n.y-2,'0'+(i+1),'mono','#5f7682','end');
+  t(lx,n.y+42,n.body,'body','#d6e0e3');
 });
 </script>
 </body></html>

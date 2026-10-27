@@ -34,7 +34,7 @@ ridge([[-20,0],[160,1800],[300,2900],[420,2500],[600,4100],[760,3600],[900,5000]
 const M=[[-30,0],[60,500],[180,900],[280,1400],[360,1250],[450,1900],[540,2400],[620,2250],[700,3050],[780,3750],[840,3550],[910,4650],[985,5650],[1040,5450],[1105,7150],[1180,8849],[1228,7950],[1262,8250],[1318,6650],[1366,5850],[1398,6050],[1442,4250],[1486,3050],[1528,1850],[1576,950],[1622,320],[1660,0]];
 let md=`M${M[0][0]} ${Y(M[0][1])}`;M.slice(1).forEach(p=>md+=` L${p[0]} ${Y(p[1]).toFixed(1)}`);md+=' L1760 984 L-30 984Z';
 const clip=el('clipPath',{id:'m'},defs);el('path',{d:md},clip);
-const G=el('g',{transform:'matrix(0.95 0 0 1 0 0)'});
+const G=el('g',{transform:'matrix(0.86 0 0 1 0 0)'});
 const massif=el('path',{d:md,fill:'#7f8b92'},G);
 const g=el('g',{['clip-path']:'url(#m)'},G);
 function band(a0,a1,fill){const w=x=>7*Math.sin(x/41)+4*Math.sin(x/13+1);let d='';for(let x=-40;x<=1680;x+=10)d+=(x>-40?'L':'M')+x+' '+(Y(a1)+(a1>8800?-200:w(x))).toFixed(1);for(let x=1680;x>=-40;x-=10)d+='L'+x+' '+(Y(a0)+(a0<1?120:w(x))).toFixed(1);el('path',{d:d+'Z',fill},g)}
@@ -53,39 +53,39 @@ el('rect',{x:0,y:0,width:1700,height:Y(8000),fill:'url(#h)'},g);
 const mp=document.querySelector('#m path');
 for(let i=0;i<1600;i++){const x=-20+rnd()*1680,a=rnd()*2350,y=Y(a);if(!massif.isPointInFill(new DOMPoint(x,y-26)))continue;const h=12+rnd()*12;el('path',{d:`M${x} ${y-h} L${x+h*.42} ${y} L${x-h*.42} ${y}Z`,fill:rnd()<.5?'#24483e':'#3d6b5c'},g)}
 el('path',{d:md,fill:'none',stroke:INK,['stroke-width']:2.2,['stroke-linejoin']:'round',opacity:.85},G);
-el('rect',{x:1596,y:0,width:324,height:984,fill:PAPER});el('line',{x1:1596,y1:120,x2:1596,y2:960,stroke:'#c9d6db',['stroke-width']:2});
+el('rect',{x:1450,y:0,width:470,height:984,fill:PAPER});el('line',{x1:1450,y1:120,x2:1450,y2:960,stroke:'#c9d6db',['stroke-width']:2});
 
 // tree line
-el('line',{x1:330,y1:Y(2500),x2:1500,y2:Y(2500),stroke:GLOW,['stroke-width']:3,['stroke-dasharray']:'14 10'});
+el('line',{x1:380,y1:Y(2500),x2:1330,y2:Y(2500),stroke:GLOW,['stroke-width']:3,['stroke-dasharray']:'14 10'});
 const t=(x,y,s,cls,fill,anchor='start')=>{const e=el('text',{x,y,class:cls,fill,['text-anchor']:anchor,stroke:cls=='hand'?PAPER:'none',['stroke-width']:cls=='hand'?8:0,['paint-order']:'stroke',['stroke-linejoin']:'round'});e.textContent=s;return e};
-t(316,Y(2500)+10,'tree line','hand',GLOW,'end');
+t(366,Y(2500)+10,'tree line','hand',GLOW,'end');
 
 // zone labels with leaders
 function zlabel(alt,xs,txt,range){const y=Y(alt);el('line',{x1:xs-150,y1:y,x2:xs,y2:y,stroke:INK,['stroke-width']:1.5});el('circle',{cx:xs,cy:y,r:5,fill:INK});t(xs-162,y-6,txt,'lbl',INK,'end');t(xs-162,y+24,range,'mono','#4a5a64','end')}
-zlabel(6700,1040,'Snow & ice','6,200 m +');
-zlabel(5200,922,'Bare rock','4,200–6,200 m');
-zlabel(3400,722,'Alpine meadow','2,500–4,200 m');
+zlabel(6700,941,'Snow & ice','6,200 m +');
+zlabel(5200,835,'Bare rock','4,200–6,200 m');
+zlabel(3400,654,'Alpine meadow','2,500–4,200 m');
 const fy=Y(1150);t(560,fy,'Forest','lbl','#f4f1ea');t(560,fy+28,'0–2,500 m','mono','#d7e3dc');
 // death zone note
-t(1210,Y(8849)-14,'“death zone”','hand',GLOW);t(1210,Y(8849)+20,'above 8,000 m','mono','#4a5a64');
+t(1050,Y(8849)-14,'“death zone”','hand',GLOW);t(1050,Y(8849)+20,'above 8,000 m','mono','#4a5a64');
 
 // gauges: altitude axis, temperature, oxygen dots
-const ax=1716;
+const ax=1560;
 el('line',{x1:ax,y1:Y(0),x2:ax,y2:Y(9000),stroke:INK,['stroke-width']:2});
 for(let a=0;a<=9000;a+=1000){const y=Y(a);el('line',{x1:ax-10,y1:y,x2:ax,y2:y,stroke:INK,['stroke-width']:2});t(ax-18,y+8,a.toLocaleString('en-US'),'mono',INK,'end')}
 for(let a=500;a<9000;a+=1000){const y=Y(a);el('line',{x1:ax-5,y1:y,x2:ax,y2:y,stroke:INK,['stroke-width']:1.2})}
 const tg=el('linearGradient',{id:'tg',x1:0,y1:1,x2:0,y2:0},defs);el('stop',{offset:'0',['stop-color']:GLOW},tg);el('stop',{offset:'.45',['stop-color']:'#e8c9a8'},tg);el('stop',{offset:'1',['stop-color']:'#6fa7bd'},tg);
-el('rect',{x:1730,y:Y(8849),width:14,height:Y(0)-Y(8849),rx:7,fill:'url(#tg)'});
+el('rect',{x:1574,y:Y(8849),width:14,height:Y(0)-Y(8849),rx:7,fill:'url(#tg)'});
 // oxygen: density of dots follows air pressure
-for(let a=0;a<9000;a+=60){const p=Math.exp(-a/8300),n=Math.round(p*7);for(let k=0;k<n;k++){const x=1764+rnd()*118,y=Y(a)-rnd()*60*(690/9000)*1;el('circle',{cx:x,cy:y,r:3.1,fill:'#2f6478',opacity:.85})}}
-t(1737,Y(9000)-56,'°C','mono',INK,'middle');t(1823,Y(9000)-56,'OXYGEN','mono',INK,'middle');t(1698,Y(9000)-56,'ALT','mono',INK,'end');
-t(1737,Y(0)+44,'+25 °C','mono','#4a5a64','middle');
+for(let a=0;a<9000;a+=60){const p=Math.exp(-a/8300),n=Math.round(p*7);for(let k=0;k<n;k++){const x=1606+rnd()*118,y=Y(a)-rnd()*60*(690/9000)*1;el('circle',{cx:x,cy:y,r:3.1,fill:'#2f6478',opacity:.85})}}
+t(1581,Y(9000)-56,'°C','mono',INK,'middle');t(1667,Y(9000)-56,'OXYGEN','mono',INK,'middle');t(1542,Y(9000)-56,'ALT','mono',INK,'end');
+t(1581,Y(0)+44,'+25 °C','mono','#4a5a64','middle');
 // handwritten readings
-t(1575,Y(7900),'−32 °C at the top','hand',GLOW,'end');
-t(1575,Y(7900)+34,'−6.5 °C every 1,000 m','mono','#4a5a64','end');
-t(1737,Y(8849)-24,'−32','mono','#4a5a64','middle');
+t(1420,Y(7900),'−32 °C at the top','hand',GLOW,'end');
+t(1420,Y(7900)+34,'−6.5 °C every 1,000 m','mono','#4a5a64','end');
+t(1581,Y(8849)-24,'−32','mono','#4a5a64','middle');
 // half oxygen marker
-const yh=Y(5500);el('line',{x1:1726,y1:yh,x2:1892,y2:yh,stroke:GLOW,['stroke-width']:3});
-t(1892,yh-14,'half the air','hand',GLOW,'end');
+const yh=Y(5500);el('line',{x1:1440,y1:yh,x2:1728,y2:yh,stroke:GLOW,['stroke-width']:3});
+t(1428,yh+11,'half the air','hand',GLOW,'end');
 </script>
 </body></html>

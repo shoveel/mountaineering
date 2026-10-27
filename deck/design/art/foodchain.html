@@ -2,32 +2,30 @@
 <html><head><meta charset="utf-8">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=National+Park:wght@400;700&family=IBM+Plex+Mono:wght@400;500&family=Nothing+You+Could+Do&family=Barlow:wght@400;500&display=swap">
 <style>
-  html,body{margin:0;width:960px;height:640px;background:#f4f1ea;overflow:hidden}
+  html,body{margin:0;width:828px;height:600px;background:#f4f1ea;overflow:hidden}
   svg{display:block}
   .lbl{font-family:'National Park',sans-serif;font-weight:700;font-size:27px;letter-spacing:1.5px;text-transform:uppercase}
   .mono{font-family:'IBM Plex Mono',monospace;font-size:24px}
-  .body{font-family:'Barlow',sans-serif;font-size:26px}
-  .hand{font-family:'Nothing You Could Do',cursive;font-size:32px}
+  .body{font-family:'Barlow',sans-serif;font-size:28px}
+  .hand{font-family:'Nothing You Could Do',cursive;font-size:36px}
 </style></head>
 <body>
-<svg id="s" width="960" height="640" viewBox="0 0 960 640" xmlns="http://www.w3.org/2000/svg"></svg>
+<svg id="s" width="828" height="600" viewBox="0 0 828 600" xmlns="http://www.w3.org/2000/svg"></svg>
 <script>
 const NS='http://www.w3.org/2000/svg',S=document.getElementById('s');
 const el=(t,a,p=S)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e};
 let seed=5;const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646};
-const INK='#0e1c26',GLOW='#e9733f',PAPER='#f4f1ea';
+const INK='#0e1c26',GLOW='#b4501f',PAPER='#f4f1ea';
 const t=(x,y,s,cls,fill,anchor='start',halo=false)=>{const e=el('text',{x,y,class:cls,fill,['text-anchor']:anchor});if(halo){e.setAttribute('stroke',PAPER);e.setAttribute('stroke-width',8);e.setAttribute('paint-order','stroke');e.setAttribute('stroke-linejoin','round')}e.textContent=s;return e};
 
-// the pyramid is a mountain: base 0..560, summit at x 280
-const L=20,R=580,TOP=36,BASE=600,CX=(L+R)/2;
+// the food pyramid drawn as a mountain
+const L=70,R=480,TOP=28,BASE=556,CX=(L+R)/2;
 const xl=y=>L+(CX-L)*(BASE-y)/(BASE-TOP), xr=y=>R-(R-CX)*(BASE-y)/(BASE-TOP);
-const ridge=[[CX,TOP],[CX+22,TOP+40],[CX+36,TOP+30],[CX+70,TOP+110]];
 const tiers=[
-  {y0:BASE,y1:440,fill:'#2f5a4f',name:'Plants',dots:150,dot:'#5d8a72'},
-  {y0:440,y1:290,fill:'#9aa977',name:'Herbivores',dots:34,dot:'#6f7f4f'},
-  {y0:290,y1:TOP,fill:'#5d6a72',name:'Predators',dots:6,dot:'#c9d1d5'},
+  {y0:BASE,y1:410,fill:'#2f5a4f',dots:120,dot:'#5d8a72',ly:496},
+  {y0:410,y1:290,fill:'#9aa977',dots:24,dot:'#6f7f4f',ly:362},
+  {y0:290,y1:TOP,fill:'#5d6a72',dots:5,dot:'#c9d1d5',ly:262},
 ];
-const defs=el('defs',{});
 tiers.forEach((T,i)=>{
   const w=x=>i?5*Math.sin(x/23+i):0;
   let d=`M${xl(T.y0)} ${T.y0}`;
@@ -38,33 +36,30 @@ tiers.forEach((T,i)=>{
   d+=` L${xl(T.y1)} ${T.y1}Z`;
   const p=el('path',{d,fill:T.fill});
   // a count of individuals that thins out toward the top
-  let n=0;for(let k=0;k<4000&&n<T.dots;k++){const x=L+rnd()*(R-L),y=T.y1+12+rnd()*(T.y0-T.y1-24);if(p.isPointInFill(new DOMPoint(x,y))&&Math.abs(y-[530,368,252][i])>40&&(Math.abs(x-CX)>120||y>T.y1+(T.y0-T.y1)*0.78||y<T.y1+(T.y0-T.y1)*0.18)){el('circle',{cx:x,cy:y,r:i==2?6:i==1?4.5:3,fill:T.dot});n++}}
+  let n=0;for(let k=0;k<5000&&n<T.dots;k++){const x=L+rnd()*(R-L),y=T.y1+12+rnd()*(T.y0-T.y1-24);if(p.isPointInFill(new DOMPoint(x,y))&&Math.abs(y-T.ly+10)>36&&(Math.abs(x-CX)>110||Math.abs(y-T.ly+10)>40)){el('circle',{cx:x,cy:y,r:i==2?6:i==1?4.5:3,fill:T.dot});n++}}
 });
-// snow cap on the summit
-el('path',{d:`M${CX} ${TOP} L${CX+46} ${TOP+82} L${CX+22} ${TOP+70} L${CX+8} ${TOP+92} L${CX-14} ${TOP+70} L${CX-34} ${TOP+86} L${xl(TOP+64)} ${TOP+64}Z`,fill:'#fbfbf8'});
+el('path',{d:`M${CX} ${TOP} L${CX+40} ${TOP+74} L${CX+20} ${TOP+62} L${CX+7} ${TOP+82} L${CX-12} ${TOP+62} L${CX-30} ${TOP+77} L${xl(TOP+58)} ${TOP+58}Z`,fill:'#fbfbf8'});
 el('path',{d:`M${L} ${BASE} L${CX} ${TOP} L${R} ${BASE}`,fill:'none',stroke:INK,['stroke-width']:2.2,['stroke-linejoin']:'round'});
-el('line',{x1:0,y1:BASE,x2:960,y2:BASE,stroke:INK,['stroke-width']:2});
+el('line',{x1:0,y1:BASE,x2:828,y2:BASE,stroke:INK,['stroke-width']:2});
 
-// tier names, centred
-t(CX,540,'Plants','lbl','#f4f1ea','middle');
-t(CX,378,'Herbivores','lbl',INK,'middle');
-t(CX,262,'Predators','lbl','#f4f1ea','middle');
+t(CX,tiers[0].ly,'Plants','lbl','#f4f1ea','middle');
+t(CX,tiers[1].ly,'Herbivores','lbl',INK,'middle');
+t(CX,tiers[2].ly,'Predators','lbl','#f4f1ea','middle');
 
-// examples with leaders, to the right
-function note(y,yl,head,body){el('line',{x1:xr(y)+10,y1:y,x2:640,y2:yl,stroke:INK,['stroke-width']:1.4});el('circle',{cx:xr(y)+10,cy:y,r:4,fill:INK});t(652,yl-8,head,'hand',GLOW);t(652,yl+24,body,'body','#3d4f5a')}
-note(530,530,'eat sunlight','grass, moss, lichen');
-note(370,370,'eat plants','pika, marmot, ibex');
-note(220,210,'eat animals','snow leopard, puma');
+function note(y,yl,head,body){el('line',{x1:xr(y)+10,y1:y,x2:520,y2:yl-12,stroke:INK,['stroke-width']:1.4});el('circle',{cx:xr(y)+10,cy:y,r:4,fill:INK});t(530,yl,head,'hand',GLOW);t(530,yl+34,body,'body','#3d4f5a')}
+note(490,474,'eat sunlight','grass, moss, lichen');
+note(345,336,'eat plants','pika, marmot, ibex');
+note(200,196,'eat animals','snow leopard, puma');
 
 // scavengers: the loop back to the soil
-el('path',{d:`M${CX+18} ${TOP-6} C 520 2, 936 0, 938 170 L 938 470 C 938 572, 860 606, 720 612`,fill:'none',stroke:GLOW,['stroke-width']:3,['stroke-dasharray']:'2 9',['stroke-linecap']:'round'});
-el('path',{d:'M712 604 l-16 9 l17 6',fill:'none',stroke:GLOW,['stroke-width']:3,['stroke-linecap']:'round',['stroke-linejoin']:'round'});
-t(640,58,'Scavengers','lbl',INK);t(640,90,'condor, vulture, magpie','body','#3d4f5a');
-t(940,632,'leftovers go back to the soil','mono','#4a5a64','end',true);
+el('path',{d:`M${CX+16} ${TOP-6} C 470 -4, 816 0, 818 150 L 818 450 C 818 534, 750 566, 640 572`,fill:'none',stroke:'#e9733f',['stroke-width']:3,['stroke-dasharray']:'2 9',['stroke-linecap']:'round'});
+el('path',{d:'M652 564 l-16 9 l17 6',fill:'none',stroke:'#e9733f',['stroke-width']:3,['stroke-linecap']:'round',['stroke-linejoin']:'round'});
+t(505,62,'Scavengers','lbl',INK);t(505,96,'condors and vultures','body','#3d4f5a');
+t(790,592,'leftovers go back to the soil','mono','#4a5a64','end',true);
 
-// energy arrow on the left flank
-el('path',{d:'M46 470 L46 150',stroke:GLOW,['stroke-width']:3,fill:'none'});
-el('path',{d:'M36 166 L46 146 L56 166',stroke:GLOW,['stroke-width']:3,fill:'none',['stroke-linejoin']:'round'});
-const e=t(30,330,'energy','hand',GLOW,'middle',true);e.setAttribute('transform','rotate(-90 30 330)');
+// energy climbs the mountain
+el('path',{d:'M46 450 L46 160',stroke:'#e9733f',['stroke-width']:3,fill:'none'});
+el('path',{d:'M36 176 L46 156 L56 176',stroke:'#e9733f',['stroke-width']:3,fill:'none',['stroke-linejoin']:'round'});
+const e=t(24,310,'energy','hand',GLOW,'middle',true);e.setAttribute('transform','rotate(-90 24 310)');
 </script>
 </body></html>
