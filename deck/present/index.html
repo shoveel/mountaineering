@@ -24,7 +24,8 @@
     font-family: Barlow, Arial, sans-serif; color: #eef2f1; will-change: transform, mask-position; }
   #stage section * { box-sizing: border-box; margin: 0; }
   #stage section > * { position: relative; }
-  #stage section div { display: flex; flex-direction: column; }
+  /* a div with no display of its own is a column; display:flex alone stays a row, as in CSS */
+  #stage section div:not([style*="display"]) { display: flex; flex-direction: column; }
   #stage section img { display: block; object-fit: cover; max-width: none; }
   #stage section svg { display: block; flex: none; }
   #stage section h1 { font-size: 96px; font-weight: 600; line-height: 1.1; }
@@ -34,7 +35,7 @@
   #stage section.on { visibility: visible; }
 
   /* the drifting band of mist that rides the transition edge */
-  #mist { position: absolute; inset: 0; pointer-events: none; opacity: 0; z-index: 5; }
+  #mist { position: absolute; left: 0; top: 0; width: 1920px; height: 984px; pointer-events: none; opacity: 0; z-index: 5; }
 
   /* chrome */
   .chip { position: fixed; z-index: 20; font: 500 13px/1 var(--mono); letter-spacing: 1.5px; text-transform: uppercase;
@@ -486,7 +487,14 @@
   const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;   // easeInOutCubic
   const lum = c => (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255;
 
-  function setMask(el, value) { el.style.webkitMaskImage = value; el.style.maskImage = value; }
+  function setMask(el, value) {
+    // the footer band (y 984-1080) stays fully shown; only the 984px above it is wiped
+    if (value) value = `linear-gradient(#000, #000), ${value}`;
+    for (const [k, v] of [['MaskImage', value], ['MaskSize', value ? '100% 96px, 100% 984px' : ''],
+                          ['MaskPosition', value ? '0 984px, 0 0' : ''], ['MaskRepeat', value ? 'no-repeat' : '']]) {
+      el.style['webkit' + k] = v; el.style[k[0].toLowerCase() + k.slice(1)] = v;
+    }
+  }
   function clear(el) { setMask(el, ''); el.style.transform = ''; el.style.opacity = ''; el.style.filter = ''; el.style.zIndex = ''; }
 
   // ---------- the transition ----------
@@ -532,9 +540,6 @@
         const edge = -F + e * (1 + F);
         const solid = (edge * 100).toFixed(2), clearAt = ((edge + F) * 100).toFixed(2);
         setMask(b, `linear-gradient(${side}, #000 ${solid}%, transparent ${clearAt}%)`);
-        b.style.transform = `translateY(${(dir * 36 * (1 - e)).toFixed(2)}px)`;
-        a.style.transform = `translateY(${(-dir * 22 * e).toFixed(2)}px)`;
-        a.style.filter = `brightness(${(1 - 0.18 * Math.sin(Math.PI * e) * jump).toFixed(3)})`;
         // mist: transparent / tinted / transparent, centred on the feather
         const peak = 0.62 * Math.sin(Math.PI * t) * (0.35 + jump);
         const m0 = ((edge - 0.08) * 100).toFixed(2), m1 = ((edge + F / 2) * 100).toFixed(2), m2 = ((edge + F + 0.08) * 100).toFixed(2);
