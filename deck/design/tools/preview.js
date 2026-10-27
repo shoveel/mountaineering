@@ -18,6 +18,8 @@ const faces = Object.values(deck.faces).map(f => f.href ? `<link rel="stylesheet
     let html = fs.readFileSync(path.join(root, 'project/slides', id + '.html'), 'utf8');
     html = html.replace(/\/_blob\/([0-9a-f]{32})/g, (m, b) => blobMap[b] ? 'file://' + path.resolve(root, blobMap[b]) : m);
     html = html.replace(/<aside>[\s\S]*?<\/aside>/, '');
+    // the deck viewer drops a padding declaration whose values exceed 256px
+    html = html.replace(/(<section[^>]*?style="[^"]*?)padding:([^;"]+);?/, (m, pre, v) => v.split(/\s+/).some(x => parseFloat(x) > 256) ? pre : m);
     const doc = `<!doctype html><html><head><meta charset="utf-8">${faces}
 <style>*{margin:0;box-sizing:border-box}body{width:1920px;height:1080px;overflow:hidden}
 section{position:relative;width:1920px;height:1080px;overflow:hidden}
