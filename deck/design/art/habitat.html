@@ -70,22 +70,22 @@ const fy=Y(1150);t(560,fy,'Forest','lbl','#f4f1ea');t(560,fy+28,'0–2,500 m','m
 t(1050,Y(8849)-14,'“death zone”','hand',GLOW);t(1050,Y(8849)+20,'above 8,000 m','mono','#4a5a64');
 
 // gauges: altitude axis, temperature, oxygen dots
-const ax=1560;
+const ax=1646;
 el('line',{x1:ax,y1:Y(0),x2:ax,y2:Y(9000),stroke:INK,['stroke-width']:2});
 for(let a=0;a<=9000;a+=1000){const y=Y(a);el('line',{x1:ax-10,y1:y,x2:ax,y2:y,stroke:INK,['stroke-width']:2});t(ax-18,y+8,a.toLocaleString('en-US'),'mono',INK,'end')}
 for(let a=500;a<9000;a+=1000){const y=Y(a);el('line',{x1:ax-5,y1:y,x2:ax,y2:y,stroke:INK,['stroke-width']:1.2})}
 const tg=el('linearGradient',{id:'tg',x1:0,y1:1,x2:0,y2:0},defs);el('stop',{offset:'0',['stop-color']:GLOW},tg);el('stop',{offset:'.45',['stop-color']:'#e8c9a8'},tg);el('stop',{offset:'1',['stop-color']:'#6fa7bd'},tg);
-el('rect',{x:1574,y:Y(8849),width:14,height:Y(0)-Y(8849),rx:7,fill:'url(#tg)'});
+el('rect',{x:1660,y:Y(8849),width:14,height:Y(0)-Y(8849),rx:7,fill:'url(#tg)'});
 // oxygen: density of dots follows air pressure
-for(let a=0;a<9000;a+=60){const p=Math.exp(-a/8300),n=Math.round(p*7);for(let k=0;k<n;k++){const x=1606+rnd()*118,y=Y(a)-rnd()*60*(690/9000)*1;el('circle',{cx:x,cy:y,r:3.1,fill:'#2f6478',opacity:.85})}}
-t(1581,Y(9000)-56,'°C','mono',INK,'middle');t(1667,Y(9000)-56,'OXYGEN','mono',INK,'middle');t(1542,Y(9000)-56,'ALT','mono',INK,'end');
-t(1581,Y(0)+44,'+25 °C','mono','#4a5a64','middle');
+for(let a=0;a<9000;a+=60){const p=Math.exp(-a/8300),n=Math.round(p*7);for(let k=0;k<n;k++){const x=1692+rnd()*118,y=Y(a)-rnd()*60*(690/9000)*1;el('circle',{cx:x,cy:y,r:3.1,fill:'#2f6478',opacity:.85})}}
+t(1667,Y(9000)-56,'°C','mono',INK,'middle');t(1753,Y(9000)-56,'OXYGEN','mono',INK,'middle');t(1628,Y(9000)-56,'ALT','mono',INK,'end');
+t(1667,Y(0)+44,'+25 °C','mono','#4a5a64','middle');
 // handwritten readings
 t(1420,Y(7900),'−32 °C at the top','hand',GLOW,'end');
 t(1420,Y(7900)+34,'−6.5 °C every 1,000 m','mono','#4a5a64','end');
-t(1581,Y(8849)-24,'−32','mono','#4a5a64','middle');
+t(1667,Y(8849)-24,'−32','mono','#4a5a64','middle');
 // half oxygen marker
-const yh=Y(5500);el('line',{x1:1440,y1:yh,x2:1728,y2:yh,stroke:GLOW,['stroke-width']:3});
+const yh=Y(5500);el('line',{x1:1440,y1:yh,x2:1814,y2:yh,stroke:GLOW,['stroke-width']:3});
 t(1428,yh+11,'half the air','hand',GLOW,'end');
 </script>
 </body></html>
